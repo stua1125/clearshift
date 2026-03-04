@@ -42,6 +42,6 @@ lib/
 - [x] Phase 1: 프로젝트 구조 + 의존성
 - [x] Phase 2: 디자인 시스템
 - [x] Phase 3: 공용 위젯
-- [ ] Phase 4: Worker 캘린더 (Paint Mode)
+- [x] Phase 4: Worker 캘린더 (Paint Mode)
 - [ ] Phase 5: Manager 화면
 - [ ] Phase 6: 추가 기능
