@@ -39,9 +39,9 @@ lib/
 
 ## 진행 상태
 - [x] Phase 0: 사전 준비
-- [ ] Phase 1: 프로젝트 구조 + 의존성
-- [ ] Phase 2: 디자인 시스템
-- [ ] Phase 3: 공용 위젯
+- [x] Phase 1: 프로젝트 구조 + 의존성
+- [x] Phase 2: 디자인 시스템
+- [x] Phase 3: 공용 위젯
 - [ ] Phase 4: Worker 캘린더 (Paint Mode)
 - [ ] Phase 5: Manager 화면
 - [ ] Phase 6: 추가 기능
