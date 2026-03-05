@@ -13,8 +13,7 @@
   │
   ▼
 {로그인 상태 확인}
-  ├─ 로그인됨 → [역할 분기] → Worker? → [W-01 Worker Calendar]
-  │                         → Manager? → [M-01 Manager Calendar]
+  ├─ 로그인됨 → [공유 캘린더 (SC-01)]
   └─ 비로그인 → [Login Screen]
 ```
 
@@ -27,7 +26,7 @@
   │ ID Token 획득
   ▼
 {백엔드 인증}
-  ├─ 기존 회원 → JWT 발급 → [역할 분기]
+  ├─ 기존 회원 → JWT 발급 → [공유 캘린더 (SC-01)]
   └─ 미가입 → [Register Screen]
 ```
 
@@ -38,25 +37,87 @@
   │ ② 지점 선택 (Dropdown → API: GET /api/branches)
   │ ③ 가입하기 버튼
   ▼
-{백엔드 등록} → JWT 발급 → [역할 분기]
+{백엔드 등록} → JWT 발급 → [공유 캘린더 (SC-01)]
 ```
 
 ---
 
-## Flow 2: Worker (근무자)
+## Flow 2: 공유 캘린더 (모든 구성원 공통)
 
-### 2.1 W-01 월별 캘린더 (메인)
+> 제출된 스케줄은 승인 없이 즉시 공유 캘린더에 반영됩니다 (Google Calendar 정책)
+
+### 2.1 SC-01 월간 공유 캘린더 (메인)
 ```
-[Worker Calendar Screen]
-  ├── Header: 앱 로고 + 역할 표시
+[Shared Calendar Screen - Monthly]
+  ├── Header: 앱 로고 + 역할 뱃지
   ├── MonthNavigator: < 2026년 3월 >
-  ├── CalendarGrid: 7열 날짜 그리드
+  ├── ViewToggle: [월간] [주간]
+  ├── SharedCalendarGrid: 7열 날짜 그리드
+  │   └── SharedDayCell 구성:
+  │       ├── 날짜 (좌상단)
+  │       ├── 근무타입별 인원수 (중앙): "D:3 N:2 OFF:1" (컬러 미니뱃지)
+  │       └── 이벤트 칩 (하단): 색상 dot + 제목
+  └── BottomNav: [공유 캘린더] [내 스케줄] [설정]
+```
+
+### 2.2 SC-02 월간 날짜 상세 (DayDetailSheet)
+```
+[SharedDayCell 탭]
+  ▼
+[Day Detail BottomSheet]
+  ├── 날짜 표시: "3월 5일 (목)"
+  ├── 근무 배정 섹션
+  │   ├── 근무타입별 그룹
+  │   │   ├── D 주간 (3명): 김철수, 이영희, 박지민
+  │   │   ├── N 야간 (2명): 홍길동, 최수진
+  │   │   └── OFF 휴무 (1명): 정민수
+  │   └── 미제출: 2명
+  └── 이벤트 섹션
+      └── 이벤트 목록 (해당 날짜)
+```
+
+### 2.3 SC-03 주간 공유 캘린더
+```
+[ViewToggle → 주간 탭]
+  ▼
+[Shared Calendar Screen - Weekly]
+  ├── WeekNavigator: < 3월 1주차 (1~7일) >
+  ├── WeeklyGrid:
+  │   ├── 헤더 행: [이름] [월1] [화2] [수3] [목4] [금5] [토6] [일7]
+  │   ├── 멤버 행:
+  │   │   ├── [김철수] [D] [D] [N] [N] [OFF] [OFF] [D]  ← ShiftBadge
+  │   │   ├── [이영희] [N] [N] [D] [D] [D] [OFF] [OFF]
+  │   │   └── [박지민] [OFF] [D] [D] [D] [N] [N] [OFF]
+  │   └── 이벤트 바:
+  │       └── 색상 바 + 이벤트 제목 (기간 표시)
+  └── 좌측 이름 컬럼: 고정 (스크롤 시 유지)
+```
+
+### 2.4 주/월 이동
+```
+[MonthNavigator / WeekNavigator]
+  ├─ < 이전 탭 → 이전 월/주 로드
+  └─ 다음 > 탭 → 다음 월/주 로드
+```
+
+---
+
+## Flow 3: Worker 내 스케줄 (근무 신청)
+
+> Worker 전용 화면. Paint Mode로 근무를 배정하고 제출합니다.
+
+### 3.1 W-01 내 스케줄 화면
+```
+[My Schedule Screen]
+  ├── Header: "내 스케줄" + 월 표시
+  ├── MonthNavigator: < 2026년 3월 >
+  ├── CalendarGrid: 7열 날짜 그리드 (내 배정만 표시)
   ├── PaintToolbar: Paint ON/OFF + 근무타입 버튼
   ├── SubmitBar: 진행률 + 제출 버튼
   └── Legend: 근무타입 색상 범례
 ```
 
-### 2.2 Paint Mode 인터랙션
+### 3.2 Paint Mode 인터랙션
 ```
 [PaintToolbar]
   │ ① Paint ON 탭
@@ -82,67 +143,27 @@
   │ API: POST /api/schedules/{year}/{month}/submit
   ▼
 [SubmitBar → "제출 완료" 상태]
+  │ 즉시 공유 캘린더에 반영됨
 ```
 
-### 2.3 월 이동
+### 3.3 제출 후 수정
 ```
-[MonthNavigator]
-  ├─ < 이전월 탭 → month-1 로드
-  └─ 다음월 > 탭 → month+1 로드
+{제출 완료 상태}
+  │ 수정이 필요할 때
+  ▼
+[Paint Mode 켜기] → 수정 시 자동으로 DRAFT로 전환
+  │ 수정 완료 후
+  ▼
+{재제출}
 ```
 
 ---
 
-## Flow 3: Manager (매니저)
+## Flow 4: Manager 관리 기능
 
-### 3.1 M-01 매니저 월별 캘린더
-```
-[Manager Calendar Screen]
-  ├── MonthNavigator: < 2026년 3월 >
-  ├── CalendarGrid (매니저 뷰)
-  │   ├── 날짜 + 이벤트 chip
-  │   └── 휴가 {현재}/{MAX} 표시
-  ├── TeamOverview 카드
-  │   └── 팀원 리스트: Avatar + 이름 + 상태 뱃지
-  └── 뷰 전환 탭: 월별 | 주별
-```
+> 매니저 전용 설정 화면. 공유 캘린더는 모든 구성원과 동일한 화면 사용.
 
-### 3.2 날짜 상세 조회
-```
-[CalendarGrid 날짜 탭]
-  ▼
-[Day Detail BottomSheet]
-  ├── 날짜 표시
-  └── 팀원별 배정 현황 리스트
-      └── Avatar + 이름 + ShiftBadge
-```
-
-### 3.3 팀원 스케줄 상세
-```
-[TeamOverview 팀원 탭]
-  │ 네비게이션: /manager/team/:memberId/schedule
-  ▼
-[Member Schedule Screen]
-  ├── MemberInfo: Avatar + 이름 + 역할
-  ├── CalendarGrid (읽기 전용)
-  ├── StatsSummary: 근무 통계 카드
-  ├── SubmitBar: 제출 상태 표시
-  └── ActionButtons
-      ├── [반려] → PATCH status=REJECTED
-      └── [승인] → PATCH status=APPROVED
-```
-
-### 3.4 M-02 주별 캘린더
-```
-[주별 탭 전환]
-  ▼
-[Weekly Calendar View]
-  ├── DataTable: 행=팀원, 열=요일(일~토)
-  ├── 셀: ShiftBadge
-  └── 좌우 스와이프: 주 이동
-```
-
-### 3.5 M-03 근무타입 관리
+### 4.1 M-01 근무타입 관리
 ```
 [Navigation: /manager/shift-types]
   ▼
@@ -159,7 +180,7 @@
         └── 저장 버튼
 ```
 
-### 3.6 M-04 휴가 MAX 관리
+### 4.2 M-02 휴가 MAX 관리
 ```
 [Navigation: /manager/vacation-settings]
   ▼
@@ -173,7 +194,7 @@
           └── DELETE /api/manager/vacation-limits/overrides/{id}
 ```
 
-### 3.7 M-05 이벤트 관리
+### 4.3 M-03 이벤트 관리
 ```
 [Navigation: /manager/events]
   ▼
@@ -192,29 +213,29 @@
 
 ---
 
-## Flow 4: 네비게이션 구조
+## Flow 5: 네비게이션 구조
 
 ```
-[BottomNavigationBar] (향후 구현)
-  ├── Worker
-  │   ├── 캘린더 (W-01)
-  │   └── 내 스케줄 (W-02, 향후)
-  └── Manager
-      ├── 캘린더 (M-01/M-02)
-      ├── 근무타입 (M-03)
-      ├── 휴가설정 (M-04)
-      ├── 이벤트 (M-05)
-      └── 팀원 상세 (M-06, 팀원 탭에서 진입)
+[BottomNavigationBar]
+  ├── 모든 사용자 공통
+  │   ├── 📅 공유 캘린더 (SC-01/SC-03) → 월간/주간 토글
+  │   ├── 📋 내 스케줄 (W-01) → Paint Mode 근무 신청
+  │   └── ⚙️ 설정
+  │       ├── Worker: 프로필, 로그아웃
+  │       └── Manager: 근무타입(M-01), 휴가설정(M-02), 이벤트(M-03), 프로필, 로그아웃
+  └── 역할별 차이
+      ├── Worker: 내 스케줄에서 Paint Mode로 근무 신청
+      └── Manager: 설정 메뉴에서 근무타입/휴가/이벤트 관리
 ```
 
 ---
 
 ## 상태 다이어그램
 
-### Schedule Status
+### Schedule Status (간소화)
 ```
-DRAFT → SUBMITTED → APPROVED
-                  → REJECTED → DRAFT (재수정)
+DRAFT → SUBMITTED (제출 즉시 공유 캘린더 반영)
+SUBMITTED → DRAFT (수정 시 자동 전환, 재제출 필요)
 ```
 
 ### Paint Mode State
@@ -240,5 +261,5 @@ ON → OFF (Paint 해제)
 | surface | #FFFFFF | 카드/시트 배경 |
 | textPrimary | #111827 | 본문 텍스트 |
 | textSecondary | #6B7280 | 보조 텍스트 |
-| error | #EF4444 | 에러/반려 |
-| success | #10B981 | 성공/승인 |
+| error | #EF4444 | 에러 |
+| success | #10B981 | 성공 |

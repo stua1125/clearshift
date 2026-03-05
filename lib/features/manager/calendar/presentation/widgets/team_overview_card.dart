@@ -91,15 +91,10 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (text, bgColor, textColor) = switch (status) {
-      SubmissionStatus.submitted || SubmissionStatus.approved => (
+      SubmissionStatus.submitted => (
           '제출 완료',
           AppColors.success.withValues(alpha: 0.1),
           AppColors.success,
-        ),
-      SubmissionStatus.rejected => (
-          '반려됨',
-          AppColors.error.withValues(alpha: 0.1),
-          AppColors.error,
         ),
       SubmissionStatus.draft when filledPercent > 0 => (
           '작성중 $filledPercent%',

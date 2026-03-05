@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 
-enum SubmissionStatus { draft, submitted, approved, rejected }
+enum SubmissionStatus { draft, submitted }
 
 class SubmitBar extends StatelessWidget {
   const SubmitBar({
@@ -64,8 +64,7 @@ class SubmitBar extends StatelessWidget {
   }
 
   Widget _buildActionWidget(BuildContext context) {
-    if (status == SubmissionStatus.submitted ||
-        status == SubmissionStatus.approved) {
+    if (status == SubmissionStatus.submitted) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
@@ -86,24 +85,6 @@ class SubmitBar extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      );
-    }
-
-    if (status == SubmissionStatus.rejected) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        decoration: BoxDecoration(
-          color: AppColors.error.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(AppSpacing.buttonBorderRadius),
-        ),
-        child: const Text(
-          '반려됨',
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-            color: AppColors.error,
-          ),
         ),
       );
     }

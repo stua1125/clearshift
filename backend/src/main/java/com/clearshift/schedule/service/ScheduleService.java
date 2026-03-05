@@ -53,11 +53,7 @@ public class ScheduleService {
                 return scheduleRepository.save(newSchedule);
             });
 
-        if (schedule.getStatus() == SubmissionStatus.APPROVED) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Already approved schedule cannot be modified");
-        }
-
-        // Reset to draft if was submitted/rejected
+        // Reset to draft when editing
         if (schedule.getStatus() != SubmissionStatus.DRAFT) {
             schedule.setStatus(SubmissionStatus.DRAFT);
         }
@@ -104,14 +100,4 @@ public class ScheduleService {
             .toList();
     }
 
-    @Transactional
-    public void updateScheduleStatus(User manager, UUID scheduleId, SubmissionStatus status) {
-        MonthlySchedule schedule = scheduleRepository.findById(scheduleId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Schedule not found"));
-
-        schedule.setStatus(status);
-        schedule.setReviewedAt(LocalDateTime.now());
-        schedule.setReviewedBy(manager);
-        scheduleRepository.save(schedule);
-    }
 }

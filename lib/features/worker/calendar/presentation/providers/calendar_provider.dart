@@ -40,8 +40,7 @@ class WorkerCalendarNotifier extends StateNotifier<CalendarState> {
 
   void tapDay(int day) {
     if (!state.paintMode) return;
-    if (state.submissionStatus == SubmissionStatus.submitted ||
-        state.submissionStatus == SubmissionStatus.approved) {
+    if (state.submissionStatus == SubmissionStatus.submitted) {
       return;
     }
 

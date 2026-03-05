@@ -289,6 +289,7 @@ Props:
   - 활성: ElevatedButton primary + shadow
   - 비활성: gray background, disabled
 - submitted 상태: "✓ 제출 완료" success chip
+- 상태: draft, submitted만 사용 (approved/rejected 제거)
 
 ### 5. CalendarGrid (calendar_grid.dart)
 
@@ -316,12 +317,70 @@ Props:
 - 불필요한 rebuild 방지를 위해 Riverpod select 사용
 ```
 
+### 6. SharedDayCell (shared_day_cell.dart)
+
+공유 캘린더의 날짜 셀. 근무타입별 인원 수를 집계하여 표시.
+
+Props:
+- day: int
+- summary: DayShiftSummary? (shiftCounts, totalMembers, submittedCount)
+- event: CalendarEvent?
+- isToday, isSunday, isSaturday: bool
+- onTap: VoidCallback
+
+레이아웃:
+- Container: height cellHeight, borderRadius 8, border 1px
+- Column 구조:
+  - 상단: 날짜 숫자 (요일별 색상)
+  - 중앙: Wrap 내 근무타입 미니뱃지 "D:3 N:2 OFF:1" (각 타입 고유 색상)
+  - 하단: 이벤트 chip (색상 dot + 제목)
+
+미니뱃지 스타일:
+- fontSize: 8, fontWeight: Bold
+- 각 뱃지: bgColor 배경 + abbreviation:count 텍스트
+- padding: horizontal 3, vertical 1
+- borderRadius: 4
+
+### 7. SharedWeeklyView (shared_weekly_view.dart)
+
+주간 공유 캘린더. Google Calendar 스타일로 인원별 근무 표시.
+
+레이아웃:
+- WeekNavigator: < 3월 1주차 (1~7일) >
+- DataTable:
+  - 첫 열: 이름 (고정 60px)
+  - 7열: 요일별 날짜 + ShiftBadge
+  - 각 셀: ShiftBadge(sm) 또는 "-" (미배정)
+- 하단: 이벤트 바 (색상 좌측 테두리 + 제목)
+
 ---
 
-## Phase 4: 근무자 메인 화면 프롬프트
+## Phase 4: 공유 캘린더 + 근무자 메인 화면 프롬프트
+
+### SC-01 공유 캘린더 (모든 구성원 공통)
+
+경로: lib/features/shared_calendar/
+
+공유 캘린더는 모든 지점 구성원이 동일하게 보는 메인 화면.
+제출된 스케줄은 승인 없이 즉시 반영 (Google Calendar 정책).
+
+화면 구성:
+1. 커스텀 헤더: 앱 로고 + "공유 캘린더" 뱃지
+2. MonthNavigator: < 2026년 3월 >
+3. ViewModeToggle: [월간] [주간] (SegmentedControl 스타일)
+4. 월간 뷰: SharedMonthlyView (SharedDayCell 사용)
+5. 주간 뷰: SharedWeeklyView (DataTable + ShiftBadge)
+
+탭 인터랙션:
+- 월간 날짜 탭 → DayDetailSheet (근무타입별 인원수 + 이벤트)
+- 주간 주 이동: < > 버튼
+
+---
+
+## Phase 4-2: 근무자 메인 화면 프롬프트
 
 ```
-Worker 캘린더 메인 화면을 구현해줘.
+Worker 내 스케줄 화면을 구현해줘. (공유 캘린더와 별도 화면)
 경로: lib/features/worker/calendar/
 
 shift-calendar-prototype.jsx의 인터랙션을 그대로 구현하되,
@@ -375,14 +434,12 @@ Auto-save:
 ```
 Manager 캘린더 화면과 관리 기능을 구현해줘.
 
-### M-01 매니저 캘린더
+### 공유 캘린더 (모든 구성원 공통)
 
-- 월간/주간 토글 (SegmentedButton)
-- 월간: CalendarGrid (매니저 뷰) — 각 셀에 이벤트 + 휴가현황 표시
-- 주간: 가로 테이블 (팀원 × 요일)
-- 날짜 탭 → BottomSheet로 해당 일자 팀원 전체 배정 상세
+공유 캘린더는 SC-01 (Phase 4)에서 구현.
+매니저와 근무자 모두 동일한 공유 캘린더를 사용.
 
-### M-03 근무타입 관리
+### M-01 근무타입 관리
 
 - ListView로 현재 타입 목록
 - 각 항목: ShiftBadge + 이름 + 편집/삭제 아이콘
@@ -407,7 +464,7 @@ Manager 캘린더 화면과 관리 기능을 구현해줘.
 - Card 안에 ListView
 - 각 행: CircleAvatar(이니셜, 고유색상) + 이름 + 상태 badge
 - 상태: "제출 완료"(success), "작성중 73%"(warning), "미시작"(gray)
-- 탭 → 해당 팀원 상세 스케줄 화면으로 이동
+- 승인/반려 없음 — 제출 즉시 공유 캘린더 반영
 ```
 
 ---
@@ -445,16 +502,29 @@ Manager 캘린더 화면과 관리 기능을 구현해줘.
 
 ---
 
+## 네비게이션 구조
+
+```
+[BottomNavigationBar]
+  ├── 📅 공유 캘린더 (/shared/calendar) — 모든 구성원 공통
+  │   ├── 월간 뷰: SharedMonthlyView (근무타입별 인원수 + 이벤트)
+  │   └── 주간 뷰: SharedWeeklyView (인원별 근무배정 + 이벤트)
+  ├── 📋 내 스케줄 (/worker/calendar) — Paint Mode 근무 신청
+  └── ⚙️ 설정
+      ├── Worker: 프로필, 로그아웃
+      └── Manager: 근무타입, 휴가설정, 이벤트 관리, 프로필, 로그아웃
+```
+
 ## 실행 순서 요약
 
-| 순서 | 프롬프트 | 결과물 | 예상 시간 |
-|------|---------|--------|----------|
-| 1 | Phase 1 | 폴더 구조 + TODO 파일 | 5분 |
-| 2 | Phase 2 | 디자인 토큰 (colors, typography, spacing, theme) | 15분 |
-| 3 | Phase 3 | 공용 위젯 5개 | 30분 |
-| 4 | Phase 4 | Worker 캘린더 메인 (Paint Mode) | 45분 |
-| 5 | Phase 5 | Manager 화면들 | 60분 |
-| 6 | 추가 | API 연동, 인증, 오프라인 지원 | 별도 |
+| 순서 | 프롬프트 | 결과물 |
+|------|---------|--------|
+| 1 | Phase 1 | 폴더 구조 + TODO 파일 |
+| 2 | Phase 2 | 디자인 토큰 (colors, typography, spacing, theme) |
+| 3 | Phase 3 | 공용 위젯 7개 (기존 5 + SharedDayCell, SharedWeeklyView) |
+| 4 | Phase 4 | 공유 캘린더 (SC-01) + Worker 내 스케줄 (W-01) |
+| 5 | Phase 5 | Manager 관리 화면들 |
+| 6 | 추가 | API 연동, 인증, 오프라인 지원 |
 
 각 Phase 완료 후 반드시:
 1. `flutter analyze` 실행하여 lint 확인
