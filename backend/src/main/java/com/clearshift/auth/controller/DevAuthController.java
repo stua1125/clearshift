@@ -6,6 +6,9 @@ import com.clearshift.branch.repository.BranchRepository;
 import com.clearshift.user.entity.Role;
 import com.clearshift.user.entity.User;
 import com.clearshift.user.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-/**
- * 개발 환경 전용 인증 컨트롤러.
- * Google OAuth 없이 테스트용 JWT를 발급합니다.
- * -Dspring.profiles.active=dev 로 실행 시에만 활성화됩니다.
- */
+@Tag(name = "개발용", description = "dev 프로필 전용 — Google OAuth 없이 테스트 JWT 발급")
 @RestController
 @RequestMapping("/api/dev")
 @RequiredArgsConstructor
@@ -28,13 +27,13 @@ public class DevAuthController {
     private final BranchRepository branchRepository;
     private final JwtService jwtService;
 
-    /**
-     * 테스트 유저 생성 + JWT 발급
-     * POST /api/dev/token?role=WORKER&name=홍길동
-     */
+    @Operation(summary = "테스트 JWT 발급",
+            description = "테스트용 유저를 생성하고 JWT를 발급합니다. 발급된 accessToken을 Authorize 버튼에 입력하세요.")
     @PostMapping("/token")
     public ResponseEntity<AuthResponse> createTestUser(
+            @Parameter(description = "역할 (ADMIN, MANAGER, WORKER)", example = "WORKER")
             @RequestParam(defaultValue = "WORKER") Role role,
+            @Parameter(description = "사용자 이름", example = "홍길동")
             @RequestParam(defaultValue = "테스트유저") String name) {
 
         var branch = branchRepository.findByIsActiveTrue().stream().findFirst()
