@@ -1,0 +1,61 @@
+package com.clearshift.shifttype.service;
+
+import com.clearshift.shifttype.entity.ShiftType;
+import com.clearshift.shifttype.repository.ShiftTypeRepository;
+import com.clearshift.user.entity.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class ShiftTypeService {
+
+    private final ShiftTypeRepository shiftTypeRepository;
+
+    public List<ShiftType> getShiftTypes(User manager) {
+        return shiftTypeRepository.findByBranchIdOrderBySortOrder(manager.getBranch().getId());
+    }
+
+    @Transactional
+    public ShiftType create(User manager, ShiftType shiftType) {
+        shiftType.setBranch(manager.getBranch());
+        return shiftTypeRepository.save(shiftType);
+    }
+
+    @Transactional
+    public ShiftType update(User manager, UUID id, ShiftType updated) {
+        ShiftType existing = shiftTypeRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        existing.setName(updated.getName());
+        existing.setAbbreviation(updated.getAbbreviation());
+        existing.setColor(updated.getColor());
+        existing.setBgColor(updated.getBgColor());
+        existing.setCategory(updated.getCategory());
+        return shiftTypeRepository.save(existing);
+    }
+
+    @Transactional
+    public void delete(UUID id) {
+        ShiftType shiftType = shiftTypeRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        shiftType.setActive(false);
+        shiftTypeRepository.save(shiftType);
+    }
+
+    @Transactional
+    public void reorder(User manager, List<UUID> orderedIds) {
+        for (int i = 0; i < orderedIds.size(); i++) {
+            ShiftType st = shiftTypeRepository.findById(orderedIds.get(i))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+            st.setSortOrder(i);
+            shiftTypeRepository.save(st);
+        }
+    }
+}

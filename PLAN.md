@@ -336,3 +336,10 @@ lib/
 - [x] Phase 4: Worker 캘린더
 - [x] Phase 5: Manager 화면
 - [ ] Phase 6: 추가 기능
+
+### Backend
+- [x] Phase B-0: Spring Boot 초기화 + Docker Compose
+- [x] Phase B-1: Google OAuth 인증 + JWT + Branch
+- [x] Phase B-2: 근무 스케줄 API
+- [x] Phase B-3: 근무타입 + 휴가 + 이벤트 API
+- [ ] Phase B-4: Flutter 프론트엔드 연동

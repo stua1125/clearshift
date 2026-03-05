@@ -1,0 +1,33 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: clearshift
+      POSTGRES_USER: clearshift
+      POSTGRES_PASSWORD: clearshift
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U clearshift"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/clearshift
+      SPRING_DATASOURCE_USERNAME: clearshift
+      SPRING_DATASOURCE_PASSWORD: clearshift
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-placeholder-client-id}
+      JWT_SECRET: ${JWT_SECRET:-this-is-a-default-dev-secret-key-that-is-at-least-256-bits-long-for-hs256}
+
+volumes:
+  postgres_data:
