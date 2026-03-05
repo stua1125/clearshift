@@ -1,6 +1,7 @@
 package com.clearshift.event.entity;
 
 import com.clearshift.branch.entity.Branch;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class CalendarEvent {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id", nullable = false)
+    @JsonIgnore
     private Branch branch;
 
     @Column(nullable = false, length = 200)

@@ -1,5 +1,6 @@
 package com.clearshift.vacation.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class VacationLimitOverride {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vacation_limit_id", nullable = false)
+    @JsonIgnore
     private VacationLimit vacationLimit;
 
     @Column(name = "target_date", nullable = false)

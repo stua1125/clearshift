@@ -1,6 +1,7 @@
 package com.clearshift.shifttype.entity;
 
 import com.clearshift.branch.entity.Branch;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +23,7 @@ public class ShiftType {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id", nullable = false)
+    @JsonIgnore
     private Branch branch;
 
     @Column(nullable = false, length = 50)

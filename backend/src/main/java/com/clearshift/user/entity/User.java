@@ -37,7 +37,7 @@ public class User {
     @Builder.Default
     private Role role = Role.WORKER;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "branch_id")
     private Branch branch;
 

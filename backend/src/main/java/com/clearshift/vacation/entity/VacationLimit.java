@@ -1,6 +1,7 @@
 package com.clearshift.vacation.entity;
 
 import com.clearshift.branch.entity.Branch;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class VacationLimit {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id", nullable = false, unique = true)
+    @JsonIgnore
     private Branch branch;
 
     @Column(name = "default_max", nullable = false)
