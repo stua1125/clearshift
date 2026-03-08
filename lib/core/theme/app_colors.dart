@@ -1,47 +1,47 @@
 import 'package:flutter/material.dart';
 
 abstract final class AppColors {
-  // Background & Surface
-  static const background = Color(0xFFF7F8FA);
+  // Background & Surface (Toss-style clean white)
+  static const background = Color(0xFFFFFFFF);
   static const surface = Color(0xFFFFFFFF);
-  static const surfaceVariant = Color(0xFFF1F3F5);
+  static const surfaceVariant = Color(0xFFF4F4F5);
 
-  // Primary
-  static const primary = Color(0xFF3B82F6);
-  static const primaryContainer = Color(0xFFDBEAFE);
+  // Primary (Toss Blue)
+  static const primary = Color(0xFF0064FF);
+  static const primaryContainer = Color(0xFFE8F0FE);
   static const onPrimary = Color(0xFFFFFFFF);
 
-  // Text
-  static const textPrimary = Color(0xFF111827);
-  static const textSecondary = Color(0xFF6B7280);
-  static const textTertiary = Color(0xFF9CA3AF);
+  // Text (Toss-style grayscale)
+  static const textPrimary = Color(0xFF191F28);
+  static const textSecondary = Color(0xFF8B95A1);
+  static const textTertiary = Color(0xFFB0B8C1);
   static const textOnColor = Color(0xFFFFFFFF);
 
-  // Border
-  static const border = Color(0xFFE5E7EB);
-  static const borderLight = Color(0xFFF3F4F6);
-  static const borderFocus = Color(0xFF3B82F6);
+  // Border (Toss-style subtle)
+  static const border = Color(0xFFE5E8EB);
+  static const borderLight = Color(0xFFF2F4F6);
+  static const borderFocus = Color(0xFF0064FF);
 
-  // Status
-  static const success = Color(0xFF10B981);
-  static const warning = Color(0xFFF59E0B);
-  static const error = Color(0xFFEF4444);
+  // Status (Toss-style)
+  static const success = Color(0xFF00C853);
+  static const warning = Color(0xFFFF9100);
+  static const error = Color(0xFFFF3B30);
 
-  // Shift Type Colors
-  static const shiftDay = Color(0xFF3B82F6);
-  static const shiftDayBg = Color(0xFFDBEAFE);
-  static const shiftNight = Color(0xFF7C3AED);
-  static const shiftNightBg = Color(0xFFEDE9FE);
-  static const shiftOff = Color(0xFF10B981);
-  static const shiftOffBg = Color(0xFFD1FAE5);
-  static const shiftVacation = Color(0xFFF59E0B);
-  static const shiftVacationBg = Color(0xFFFEF3C7);
-  static const shiftTraining = Color(0xFFEC4899);
-  static const shiftTrainingBg = Color(0xFFFCE7F3);
+  // Shift Type Colors (vibrant, TimeTree-inspired)
+  static const shiftDay = Color(0xFF0064FF);
+  static const shiftDayBg = Color(0xFFE8F0FE);
+  static const shiftNight = Color(0xFF6C5CE7);
+  static const shiftNightBg = Color(0xFFF0EDFF);
+  static const shiftOff = Color(0xFF00B894);
+  static const shiftOffBg = Color(0xFFE6F9F3);
+  static const shiftVacation = Color(0xFFFF9100);
+  static const shiftVacationBg = Color(0xFFFFF3E0);
+  static const shiftTraining = Color(0xFFFF3B30);
+  static const shiftTrainingBg = Color(0xFFFFEBEE);
 
   // Calendar
-  static const calendarSunday = Color(0xFFEF4444);
-  static const calendarSaturday = Color(0xFF3B82F6);
+  static const calendarSunday = Color(0xFFFF3B30);
+  static const calendarSaturday = Color(0xFF0064FF);
   static const calendarCellHover = Color(0xFFF9FAFB);
 
   // Light ColorScheme
@@ -60,13 +60,13 @@ abstract final class AppColors {
   // Dark ColorScheme
   static ColorScheme get darkColorScheme => ColorScheme.dark(
         primary: primary,
-        primaryContainer: const Color(0xFF1E3A5F),
+        primaryContainer: const Color(0xFF0A2E5C),
         onPrimary: onPrimary,
-        surface: const Color(0xFF1F2937),
+        surface: const Color(0xFF17171C),
         onSurface: const Color(0xFFF9FAFB),
-        onSurfaceVariant: const Color(0xFF9CA3AF),
+        onSurfaceVariant: const Color(0xFF8B95A1),
         error: error,
-        outline: const Color(0xFF374151),
-        outlineVariant: const Color(0xFF1F2937),
+        outline: const Color(0xFF2E3038),
+        outlineVariant: const Color(0xFF1F2028),
       );
 }

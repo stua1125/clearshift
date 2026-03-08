@@ -12,7 +12,7 @@ abstract final class AppTheme {
 
   static ThemeData get dark => _buildTheme(
         colorScheme: AppColors.darkColorScheme,
-        scaffoldBackground: const Color(0xFF111827),
+        scaffoldBackground: const Color(0xFF111113),
       );
 
   static ThemeData _buildTheme({
@@ -33,10 +33,15 @@ abstract final class AppTheme {
       cardTheme: CardThemeData(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.cardBorderRadius),
-          side: BorderSide(color: colorScheme.outlineVariant),
         ),
-        elevation: AppSpacing.cardElevation,
+        elevation: 0,
+        color: AppColors.surface,
         margin: EdgeInsets.zero,
+      ),
+      dividerTheme: const DividerThemeData(
+        color: AppColors.borderLight,
+        thickness: 1,
+        space: 0,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -48,6 +53,7 @@ abstract final class AppTheme {
             horizontal: AppSpacing.xl,
             vertical: AppSpacing.md,
           ),
+          elevation: 0,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -67,6 +73,8 @@ abstract final class AppTheme {
           horizontal: AppSpacing.lg,
           vertical: AppSpacing.md,
         ),
+        filled: true,
+        fillColor: AppColors.surfaceVariant,
       ),
       bottomSheetTheme: BottomSheetThemeData(
         shape: const RoundedRectangleBorder(
@@ -78,7 +86,10 @@ abstract final class AppTheme {
         dragHandleColor: colorScheme.outlineVariant,
       ),
       navigationBarTheme: NavigationBarThemeData(
-        indicatorColor: colorScheme.primaryContainer,
+        backgroundColor: colorScheme.surface,
+        elevation: 0,
+        indicatorColor: AppColors.primaryContainer,
+        surfaceTintColor: Colors.transparent,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return AppTypography.textTheme.labelSmall?.copyWith(

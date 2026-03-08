@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/shared_day_cell.dart';
 import '../../../../shared/models/calendar_event.dart';
 import '../../../../shared/models/shift_type.dart';
@@ -87,20 +88,20 @@ class SharedCalendarNotifier extends StateNotifier<SharedCalendarState> {
           ShiftCountData(
             abbreviation: 'D',
             count: 3 + (day % 2),
-            color: const Color(0xFF3B82F6),
-            bgColor: const Color(0xFFDBEAFE),
+            color: AppColors.shiftDay,
+            bgColor: AppColors.shiftDayBg,
           ),
           ShiftCountData(
             abbreviation: 'N',
             count: 2,
-            color: const Color(0xFF7C3AED),
-            bgColor: const Color(0xFFEDE9FE),
+            color: AppColors.shiftNight,
+            bgColor: AppColors.shiftNightBg,
           ),
           ShiftCountData(
             abbreviation: 'OFF',
             count: 1 + (day % 3),
-            color: const Color(0xFF10B981),
-            bgColor: const Color(0xFFD1FAE5),
+            color: AppColors.shiftOff,
+            bgColor: AppColors.shiftOffBg,
           ),
         ],
         totalMembers: 8,
@@ -113,9 +114,9 @@ class SharedCalendarNotifier extends StateNotifier<SharedCalendarState> {
         id: 'e1',
         teamId: 'branch1',
         title: '정기 교육',
-        startDate: DateTime(state.year, state.month, 5),
-        endDate: DateTime(state.year, state.month, 7),
-        color: const Color(0xFF3B82F6),
+        startDate: DateTime(state.year, state.month, 3),
+        endDate: DateTime(state.year, state.month, 5),
+        color: AppColors.primary,
       ),
       CalendarEvent(
         id: 'e2',
@@ -123,7 +124,7 @@ class SharedCalendarNotifier extends StateNotifier<SharedCalendarState> {
         title: '안전 점검',
         startDate: DateTime(state.year, state.month, 15),
         endDate: DateTime(state.year, state.month, 15),
-        color: const Color(0xFFEF4444),
+        color: AppColors.error,
       ),
     ];
 
@@ -131,28 +132,28 @@ class SharedCalendarNotifier extends StateNotifier<SharedCalendarState> {
   }
 
   void _loadWeeklyMock() {
-    final shiftDay = ShiftType(
+    const shiftDay = ShiftType(
       id: 'day',
       name: '주간',
       abbreviation: 'D',
-      color: const Color(0xFF3B82F6),
-      bgColor: const Color(0xFFDBEAFE),
+      color: AppColors.shiftDay,
+      bgColor: AppColors.shiftDayBg,
       category: ShiftCategory.work,
     );
-    final shiftNight = ShiftType(
+    const shiftNight = ShiftType(
       id: 'night',
       name: '야간',
       abbreviation: 'N',
-      color: const Color(0xFF7C3AED),
-      bgColor: const Color(0xFFEDE9FE),
+      color: AppColors.shiftNight,
+      bgColor: AppColors.shiftNightBg,
       category: ShiftCategory.work,
     );
-    final shiftOff = ShiftType(
+    const shiftOff = ShiftType(
       id: 'off',
       name: '휴무',
       abbreviation: 'OFF',
-      color: const Color(0xFF10B981),
-      bgColor: const Color(0xFFD1FAE5),
+      color: AppColors.shiftOff,
+      bgColor: AppColors.shiftOffBg,
       category: ShiftCategory.leave,
     );
 

@@ -8,15 +8,15 @@ abstract final class AppSpacing {
   static const double xxl = 24;
   static const double xxxl = 32;
 
-  // Calendar
-  static const double cellHeightMobile = 56;
+  // Calendar (TimeTree-style compact)
+  static const double cellHeightMobile = 60;
   static const double cellHeightTablet = 80;
-  static const double cellGap = 4;
+  static const double cellGap = 1;
   static const double cellPadding = 4;
-  static const double cellBorderRadius = 8;
+  static const double cellBorderRadius = 0;
 
   // Card
-  static const double cardBorderRadius = 16;
+  static const double cardBorderRadius = 12;
   static const double cardPadding = 16;
   static const double cardElevation = 0;
 
@@ -24,8 +24,8 @@ abstract final class AppSpacing {
   static const double bottomSheetRadius = 20;
 
   // Input
-  static const double inputBorderRadius = 12;
+  static const double inputBorderRadius = 10;
 
   // Button
-  static const double buttonBorderRadius = 100;
+  static const double buttonBorderRadius = 8;
 }

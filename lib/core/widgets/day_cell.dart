@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import '../../shared/models/calendar_event.dart';
 import '../../shared/models/shift_type.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_shadows.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_typography.dart';
 import 'shift_badge.dart';
@@ -37,7 +36,8 @@ class DayCell extends StatefulWidget {
   State<DayCell> createState() => _DayCellState();
 }
 
-class _DayCellState extends State<DayCell> with SingleTickerProviderStateMixin {
+class _DayCellState extends State<DayCell>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _scaleController;
   late final Animation<double> _scaleAnimation;
 
@@ -83,75 +83,79 @@ class _DayCellState extends State<DayCell> with SingleTickerProviderStateMixin {
           padding: const EdgeInsets.all(AppSpacing.cellPadding),
           decoration: BoxDecoration(
             color: widget.shift != null
-                ? widget.shift!.bgColor.withValues(alpha: 0.25)
-                : AppColors.surface,
-            borderRadius: BorderRadius.circular(AppSpacing.cellBorderRadius),
-            border: Border.all(
-              color: widget.isToday ? AppColors.primary : AppColors.borderLight,
-              width: widget.isToday ? 2 : 1,
+                ? widget.shift!.bgColor.withValues(alpha: 0.3)
+                : Colors.transparent,
+            border: Border(
+              bottom: BorderSide(color: AppColors.borderLight, width: 0.5),
+              right: BorderSide(color: AppColors.borderLight, width: 0.5),
             ),
-            boxShadow: widget.isToday ? AppShadows.focus : AppShadows.none,
           ),
-          child: Stack(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Day number (top-left)
-              Positioned(
-                top: 0,
-                left: 0,
-                child: Text(
-                  '${widget.day}',
-                  style: AppTypography.calendarDay.copyWith(color: _dayColor),
-                ),
+              // Day number + today indicator
+              Row(
+                children: [
+                  if (widget.isToday)
+                    Container(
+                      width: 22,
+                      height: 22,
+                      decoration: const BoxDecoration(
+                        color: AppColors.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        '${widget.day}',
+                        style: AppTypography.calendarDay.copyWith(
+                          color: AppColors.onPrimary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    )
+                  else
+                    Text(
+                      '${widget.day}',
+                      style: AppTypography.calendarDay.copyWith(color: _dayColor),
+                    ),
+                  const Spacer(),
+                  if (widget.shift != null)
+                    ShiftBadge(
+                      shiftType: widget.shift!,
+                      size: ShiftBadgeSize.sm,
+                    ),
+                ],
               ),
-              // ShiftBadge (top-right)
-              if (widget.shift != null)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: ShiftBadge(
-                    shiftType: widget.shift!,
-                    size: ShiftBadgeSize.sm,
-                  ),
-                ),
-              // Event chip or vacation info (bottom)
+              const Spacer(),
+              // Event chip (TimeTree-style colored text)
               if (widget.event != null)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 2,
-                      vertical: 1,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+                  decoration: BoxDecoration(
+                    color: widget.event!.color,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                  child: Text(
+                    widget.event!.title,
+                    style: const TextStyle(
+                      fontSize: 8,
+                      color: AppColors.textOnColor,
+                      fontWeight: FontWeight.w500,
                     ),
-                    decoration: BoxDecoration(
-                      color: widget.event!.color.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      widget.event!.title,
-                      style: const TextStyle(fontSize: 8),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               if (widget.vacationInfo != null && widget.event == null)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Text(
-                    '${widget.vacationInfo!.current}/${widget.vacationInfo!.max}',
-                    style: TextStyle(
-                      fontSize: 9,
-                      color: widget.vacationInfo!.current >=
-                              widget.vacationInfo!.max
-                          ? AppColors.error
-                          : AppColors.textTertiary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textAlign: TextAlign.center,
+                Text(
+                  '${widget.vacationInfo!.current}/${widget.vacationInfo!.max}',
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: widget.vacationInfo!.current >=
+                            widget.vacationInfo!.max
+                        ? AppColors.error
+                        : AppColors.textTertiary,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
             ],

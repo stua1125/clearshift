@@ -83,62 +83,66 @@ lib/
 
 ```
 ShiftFlow의 디자인 시스템을 구현해줘.
-디자인 레퍼런스는 "Shift Work Planner" 앱이야.
+디자인 레퍼런스는 TimeTree 캘린더 + 토스(Toss) UI/컬러야.
 
 핵심 디자인 특성:
+- 디자인 레퍼런스: TimeTree 캘린더 + 토스(Toss) 컬러/UI
 - 컬러풀한 pill 형태의 근무 뱃지가 캘린더 셀에 표시
 - 하단에 summary bar (근무일수, 시간 등 실시간 표시)
 - Paint mode에서 근무타입 선택 후 날짜 탭으로 일괄 등록
-- 깔끔한 흰색 배경 + 둥근 카드 UI
+- 순백(#FFFFFF) 배경 + 미니멀 카드 UI (토스 스타일)
+- Primary: Toss Blue (#0064FF)
 - 색상 코딩으로 패턴을 한눈에 파악
+- TimeTree 스타일: 날짜 셀에 이벤트 컬러 태그, 경계선 최소화
 
 ### app_colors.dart
 
 다음 컬러 시스템을 구현해줘:
 
-// Background & Surface
-- background: #F7F8FA (앱 전체 배경)
+// Background & Surface (Toss-style 순백)
+- background: #FFFFFF (앱 전체 배경)
 - surface: #FFFFFF (카드, 셀)
-- surfaceVariant: #F1F3F5 (비활성 영역)
+- surfaceVariant: #F4F4F5 (비활성 영역, 토글 배경)
 
-// Primary
-- primary: #3B82F6 (주 액션, 오늘 날짜 강조)
-- primaryContainer: #DBEAFE
+// Primary (Toss Blue)
+- primary: #0064FF (Toss Blue — 주 액션, 오늘 날짜 강조)
+- primaryContainer: #E8F0FE
 - onPrimary: #FFFFFF
 
-// Text
-- textPrimary: #111827
-- textSecondary: #6B7280
-- textTertiary: #9CA3AF
+// Text (Toss-style grayscale)
+- textPrimary: #191F28
+- textSecondary: #8B95A1
+- textTertiary: #B0B8C1
 - textOnColor: #FFFFFF
 
-// Border
-- border: #E5E7EB
-- borderLight: #F3F4F6
-- borderFocus: #3B82F6
+// Border (Toss-style 미니멀)
+- border: #E5E8EB
+- borderLight: #F2F4F6
+- borderFocus: #0064FF
 
-// Status
-- success: #10B981 (제출 완료, 승인)
-- warning: #F59E0B (작성 중, 주의)
-- error: #EF4444 (반려, MAX 초과)
+// Status (Toss-style)
+- success: #00C853 (제출 완료)
+- warning: #FF9100 (작성 중)
+- error: #FF3B30 (반려, MAX 초과)
 
-// Shift Type Colors (근무타입별 고유 색상)
-- shiftDay: #3B82F6 (주간)
-- shiftDayBg: #DBEAFE
-- shiftNight: #7C3AED (야간)
-- shiftNightBg: #EDE9FE
-- shiftOff: #10B981 (휴무)
-- shiftOffBg: #D1FAE5
-- shiftVacation: #F59E0B (휴가)
-- shiftVacationBg: #FEF3C7
-- shiftTraining: #EC4899 (교육)
-- shiftTrainingBg: #FCE7F3
+// Shift Type Colors (vibrant, TimeTree-inspired)
+- shiftDay: #0064FF (주간 — Toss Blue)
+- shiftDayBg: #E8F0FE
+- shiftNight: #6C5CE7 (야간)
+- shiftNightBg: #F0EDFF
+- shiftOff: #00B894 (휴무)
+- shiftOffBg: #E6F9F3
+- shiftVacation: #FF9100 (휴가)
+- shiftVacationBg: #FFF3E0
+- shiftTraining: #FF3B30 (교육)
+- shiftTrainingBg: #FFEBEE
 
 // Calendar
-- calendarSunday: #EF4444
-- calendarSaturday: #3B82F6
-- calendarToday: border 2px #3B82F6 + ring shadow
+- calendarSunday: #FF3B30
+- calendarSaturday: #0064FF
+- calendarToday: 파란 원형 배경(#0064FF) + 흰 숫자
 - calendarCellHover: #F9FAFB
+- 셀 경계: 0.5px borderLight (TimeTree-style 미니멀)
 
 // Dark Mode 변형도 함께 정의 (ColorScheme.dark 기반)
 
@@ -164,16 +168,19 @@ Google Fonts 패키지로 Noto Sans KR을 대안으로 사용 가능.
 4px 기반 spacing scale:
 - xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32
 
-Calendar specific:
-- cellHeight: 56 (mobile), 80 (tablet)
-- cellGap: 4
+Calendar specific (TimeTree-style compact):
+- cellHeight: 60 (mobile), 80 (tablet)
+- cellGap: 1 (거의 없는 간격)
 - cellPadding: 4
-- cellBorderRadius: 8
+- cellBorderRadius: 0 (TimeTree-style 경계선 없음)
 
 Card:
-- cardBorderRadius: 16
+- cardBorderRadius: 12 (Toss-style 둥근 모서리)
 - cardPadding: 16
-- cardElevation: 0 (border 기반, shadow 없음)
+- cardElevation: 0 (shadow 없음, 미니멀)
+
+Button:
+- buttonBorderRadius: 8 (Toss-style)
 
 ### app_shadows.dart
 
@@ -237,9 +244,9 @@ Props:
 - onTap: VoidCallback
 
 레이아웃:
-- Container: height cellHeight, borderRadius 8, border 1px
-- isToday: border primary 2px + Container shadow focus
-- 배정된 경우: background shiftType.bgColor.withOpacity(0.25)
+- Container: height cellHeight, borderRadius 0, border 0.5px borderLight (TimeTree-style)
+- isToday: 날짜 숫자를 파란 원(#0064FF)으로 감싸고 흰색 텍스트
+- 배정된 경우: background shiftType.bgColor.withOpacity(0.3)
 - Stack 구조:
   - 좌상단: 날짜 숫자 (요일별 색상)
   - 우상단: ShiftBadge (sm)
@@ -329,7 +336,7 @@ Props:
 - onTap: VoidCallback
 
 레이아웃:
-- Container: height cellHeight, borderRadius 8, border 1px
+- Container: height cellHeight, border 0.5px borderLight (TimeTree-style)
 - Column 구조:
   - 상단: 날짜 숫자 (요일별 색상)
   - 중앙: Wrap 내 근무타입 미니뱃지 "D:3 N:2 OFF:1" (각 타입 고유 색상)
@@ -343,15 +350,18 @@ Props:
 
 ### 7. SharedWeeklyView (shared_weekly_view.dart)
 
-주간 공유 캘린더. Google Calendar 스타일로 인원별 근무 표시.
+주간 공유 캘린더. Google Calendar 주간 뷰 스타일.
 
 레이아웃:
 - WeekNavigator: < 3월 1주차 (1~7일) >
-- DataTable:
-  - 첫 열: 이름 (고정 60px)
-  - 7열: 요일별 날짜 + ShiftBadge
-  - 각 셀: ShiftBadge(sm) 또는 "-" (미배정)
-- 하단: 이벤트 바 (색상 좌측 테두리 + 제목)
+- 요일 헤더 Row: [월1] [화2] ... [일7] (요일별 색상, 오늘 강조)
+- 이벤트 바: 해당 날짜 열에 걸쳐 표시 (색상 좌측 테두리 + 제목)
+- 7열 DayColumn 그리드:
+  - 각 열 = 하루 (세로 방향)
+  - 열 안에 해당 날짜에 배정된 워커들이 세로로 쌓임
+  - 각 워커 카드: ShiftBadge 색상 배경 + 약어 + 이름
+  - 미배정 워커는 표시하지 않음
+  - 세로 스크롤 가능 (인원이 많을 경우)
 
 ---
 

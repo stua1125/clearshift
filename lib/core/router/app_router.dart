@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/manager/events/presentation/events_screen.dart';
@@ -5,21 +6,44 @@ import '../../features/manager/shift_types/presentation/shift_types_screen.dart'
 import '../../features/manager/vacation_settings/presentation/vacation_settings_screen.dart';
 import '../../features/shared_calendar/presentation/shared_calendar_screen.dart';
 import '../../features/worker/calendar/presentation/worker_calendar_screen.dart';
+import '../theme/app_colors.dart';
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final appRouter = GoRouter(
+  navigatorKey: _rootNavigatorKey,
   initialLocation: '/shared/calendar',
   routes: [
-    GoRoute(
-      path: '/shared/calendar',
-      builder: (context, state) => const SharedCalendarScreen(),
-    ),
-    GoRoute(
-      path: '/worker/calendar',
-      builder: (context, state) => const WorkerCalendarScreen(),
-    ),
-    GoRoute(
-      path: '/manager/shift-types',
-      builder: (context, state) => const ShiftTypesScreen(),
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return _ScaffoldWithNav(navigationShell: navigationShell);
+      },
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/shared/calendar',
+              builder: (context, state) => const SharedCalendarScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/worker/calendar',
+              builder: (context, state) => const WorkerCalendarScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/manager/shift-types',
+              builder: (context, state) => const ShiftTypesScreen(),
+            ),
+          ],
+        ),
+      ],
     ),
     GoRoute(
       path: '/manager/vacation-settings',
@@ -31,3 +55,51 @@ final appRouter = GoRouter(
     ),
   ],
 );
+
+class _ScaffoldWithNav extends StatelessWidget {
+  const _ScaffoldWithNav({required this.navigationShell});
+
+  final StatefulNavigationShell navigationShell;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: navigationShell,
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(color: AppColors.borderLight, width: 0.5),
+          ),
+        ),
+        child: NavigationBar(
+          selectedIndex: navigationShell.currentIndex,
+          onDestinationSelected: (index) {
+            navigationShell.goBranch(
+              index,
+              initialLocation: index == navigationShell.currentIndex,
+            );
+          },
+          height: 60,
+          indicatorColor: AppColors.primaryContainer,
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.calendar_month_outlined),
+              selectedIcon: Icon(Icons.calendar_month),
+              label: '공유 캘린더',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.edit_calendar_outlined),
+              selectedIcon: Icon(Icons.edit_calendar),
+              label: '근무 신청',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.settings_outlined),
+              selectedIcon: Icon(Icons.settings),
+              label: '설정',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
