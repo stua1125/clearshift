@@ -86,19 +86,19 @@ class SharedCalendarNotifier extends StateNotifier<SharedCalendarState> {
       summaries[day] = DayShiftSummary(
         shiftCounts: [
           ShiftCountData(
-            abbreviation: 'D',
+            abbreviation: 'MD',
             count: 3 + (day % 2),
-            color: AppColors.shiftDay,
-            bgColor: AppColors.shiftDayBg,
+            color: AppColors.shiftMorning,
+            bgColor: AppColors.shiftMorningBg,
           ),
           ShiftCountData(
-            abbreviation: 'N',
+            abbreviation: 'NI',
             count: 2,
             color: AppColors.shiftNight,
             bgColor: AppColors.shiftNightBg,
           ),
           ShiftCountData(
-            abbreviation: 'OFF',
+            abbreviation: 'HD',
             count: 1 + (day % 3),
             color: AppColors.shiftOff,
             bgColor: AppColors.shiftOffBg,
@@ -132,18 +132,18 @@ class SharedCalendarNotifier extends StateNotifier<SharedCalendarState> {
   }
 
   void _loadWeeklyMock() {
-    const shiftDay = ShiftType(
-      id: 'day',
-      name: '주간',
-      abbreviation: 'D',
-      color: AppColors.shiftDay,
-      bgColor: AppColors.shiftDayBg,
+    const shiftMorning = ShiftType(
+      id: 'morning',
+      name: '오전 근무',
+      abbreviation: 'MD',
+      color: AppColors.shiftMorning,
+      bgColor: AppColors.shiftMorningBg,
       category: ShiftCategory.work,
     );
     const shiftNight = ShiftType(
       id: 'night',
-      name: '야간',
-      abbreviation: 'N',
+      name: '야간 근무',
+      abbreviation: 'NI',
       color: AppColors.shiftNight,
       bgColor: AppColors.shiftNightBg,
       category: ShiftCategory.work,
@@ -151,7 +151,7 @@ class SharedCalendarNotifier extends StateNotifier<SharedCalendarState> {
     const shiftOff = ShiftType(
       id: 'off',
       name: '휴무',
-      abbreviation: 'OFF',
+      abbreviation: 'HD',
       color: AppColors.shiftOff,
       bgColor: AppColors.shiftOffBg,
       category: ShiftCategory.leave,
@@ -160,31 +160,40 @@ class SharedCalendarNotifier extends StateNotifier<SharedCalendarState> {
     final ws = state.selectedWeekStartDay;
     final members = [
       MemberWeekRow(userId: 'u1', userName: '김철수', assignments: {
-        ws: shiftDay,
-        ws + 1: shiftDay,
+        ws: shiftMorning,
+        ws + 1: shiftMorning,
         ws + 2: shiftNight,
         ws + 3: shiftNight,
         ws + 4: shiftOff,
         ws + 5: shiftOff,
-        ws + 6: shiftDay,
+        ws + 6: shiftMorning,
       }),
       MemberWeekRow(userId: 'u2', userName: '이영희', assignments: {
         ws: shiftNight,
         ws + 1: shiftNight,
-        ws + 2: shiftDay,
-        ws + 3: shiftDay,
-        ws + 4: shiftDay,
+        ws + 2: shiftMorning,
+        ws + 3: shiftMorning,
+        ws + 4: shiftMorning,
         ws + 5: shiftOff,
         ws + 6: shiftOff,
       }),
       MemberWeekRow(userId: 'u3', userName: '박지민', assignments: {
         ws: shiftOff,
-        ws + 1: shiftDay,
-        ws + 2: shiftDay,
-        ws + 3: shiftDay,
+        ws + 1: shiftMorning,
+        ws + 2: shiftMorning,
+        ws + 3: shiftMorning,
         ws + 4: shiftNight,
         ws + 5: shiftNight,
         ws + 6: shiftOff,
+      }),
+      MemberWeekRow(userId: 'u4', userName: '최수진', assignments: {
+        ws: shiftMorning,
+        ws + 1: shiftOff,
+        ws + 2: shiftOff,
+        ws + 3: shiftNight,
+        ws + 4: shiftNight,
+        ws + 5: shiftMorning,
+        ws + 6: shiftMorning,
       }),
     ];
 

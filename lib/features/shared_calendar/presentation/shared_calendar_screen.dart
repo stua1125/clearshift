@@ -19,6 +19,40 @@ class SharedCalendarScreen extends ConsumerWidget {
     return SafeArea(
       child: Column(
         children: [
+          // AppBar
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg, AppSpacing.sm, AppSpacing.lg, 0),
+            child: Row(
+              children: [
+                const Text(
+                  'ClearShift',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text(
+                    '근무자',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           // Fixed header area
           Padding(
             padding: const EdgeInsets.fromLTRB(
@@ -106,16 +140,8 @@ class _MonthNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          '$year년 $month월',
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w800,
-            color: AppColors.textPrimary,
-          ),
-        ),
-        const Spacer(),
         IconButton(
           onPressed: onPrevious,
           icon: const Icon(Icons.chevron_left, size: 24),
@@ -124,7 +150,16 @@ class _MonthNavigator extends StatelessWidget {
             shape: const CircleBorder(),
           ),
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: AppSpacing.sm),
+        Text(
+          '$year년 $month월',
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
         IconButton(
           onPressed: onNext,
           icon: const Icon(Icons.chevron_right, size: 24),

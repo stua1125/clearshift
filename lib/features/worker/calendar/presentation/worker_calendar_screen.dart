@@ -5,7 +5,6 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/calendar_grid.dart';
 import '../../../../core/widgets/paint_toolbar.dart';
-import '../../../../core/widgets/shift_badge.dart';
 import '../../../../core/widgets/submit_bar.dart';
 import 'providers/calendar_provider.dart';
 
@@ -17,13 +16,39 @@ class WorkerCalendarScreen extends ConsumerWidget {
     final state = ref.watch(workerCalendarProvider);
     final notifier = ref.read(workerCalendarProvider.notifier);
     final daysInMonth = DateTime(state.year, state.month + 1, 0).day;
+    final isSubmitted = state.submissionStatus == SubmissionStatus.submitted;
 
-    return SafeArea(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).maybePop(),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+        ),
+        title: const Text(
+          '내 스케줄',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.settings_outlined, size: 22),
+          ),
+        ],
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        backgroundColor: AppColors.surface,
+      ),
+      body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(
-                AppSpacing.lg, AppSpacing.md, AppSpacing.lg, 0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.sm,
+            ),
             child: _MonthNavigator(
               year: state.year,
               month: state.month,
@@ -31,42 +56,49 @@ class WorkerCalendarScreen extends ConsumerWidget {
               onNext: () => notifier.navigateMonth(1),
             ),
           ),
-          const SizedBox(height: AppSpacing.sm),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-              child: Column(
-                children: [
-                  CalendarGrid(
-                    year: state.year,
-                    month: state.month,
-                    assignments: state.assignments,
-                    isPaintMode: state.paintMode,
-                    selectedShiftType: state.selectedShiftType,
-                    onDayTap: notifier.tapDay,
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  PaintToolbar(
-                    shiftTypes: state.shiftTypes,
-                    selectedType: state.selectedShiftType,
-                    isPaintMode: state.paintMode,
-                    onSelectType: notifier.selectShiftType,
-                    onTogglePaint: notifier.togglePaintMode,
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-                  SubmitBar(
-                    filledCount: state.assignments.length,
-                    totalDays: daysInMonth,
-                    status: state.submissionStatus,
-                    onSubmit: notifier.submitSchedule,
-                  ),
-                  const SizedBox(height: AppSpacing.lg),
-                  _Legend(shiftTypes: state.shiftTypes),
-                  const SizedBox(height: AppSpacing.lg),
-                ],
+              child: CalendarGrid(
+                year: state.year,
+                month: state.month,
+                assignments: state.assignments,
+                isPaintMode: state.paintMode,
+                selectedShiftType: state.selectedShiftType,
+                onDayTap: notifier.tapDay,
               ),
             ),
           ),
+          const Divider(height: 1, color: AppColors.borderLight),
+          if (isSubmitted)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.lg),
+              child: SubmitBar(
+                filledCount: state.assignments.length,
+                totalDays: daysInMonth,
+                status: state.submissionStatus,
+                onSubmit: notifier.submitSchedule,
+              ),
+            )
+          else ...[
+            Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.lg),
+              child: SubmitBar(
+                filledCount: state.assignments.length,
+                totalDays: daysInMonth,
+                status: state.submissionStatus,
+                onSubmit: notifier.submitSchedule,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            PaintToolbar(
+              shiftTypes: state.shiftTypes,
+              selectedType: state.selectedShiftType,
+              isPaintMode: state.paintMode,
+              onSelectType: notifier.selectShiftType,
+              onTogglePaint: notifier.togglePaintMode,
+            ),
+          ],
         ],
       ),
     );
@@ -89,61 +121,35 @@ class _MonthNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          '$year년 $month월',
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w800,
-            color: AppColors.textPrimary,
-          ),
-        ),
-        const Spacer(),
         IconButton(
           onPressed: onPrevious,
           icon: const Icon(Icons.chevron_left, size: 24),
           style: IconButton.styleFrom(
-            backgroundColor: AppColors.surfaceVariant,
-            shape: const CircleBorder(),
+            padding: EdgeInsets.zero,
+            minimumSize: const Size(36, 36),
           ),
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: AppSpacing.sm),
+        Text(
+          '$year년 $month월',
+          style: const TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
         IconButton(
           onPressed: onNext,
           icon: const Icon(Icons.chevron_right, size: 24),
           style: IconButton.styleFrom(
-            backgroundColor: AppColors.surfaceVariant,
-            shape: const CircleBorder(),
+            padding: EdgeInsets.zero,
+            minimumSize: const Size(36, 36),
           ),
         ),
       ],
-    );
-  }
-}
-
-class _Legend extends StatelessWidget {
-  const _Legend({required this.shiftTypes});
-
-  final List<dynamic> shiftTypes;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: AppSpacing.md,
-      runSpacing: AppSpacing.xs,
-      children: shiftTypes.map((type) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ShiftBadge(shiftType: type, size: ShiftBadgeSize.sm),
-            const SizedBox(width: 4),
-            Text(
-              type.name,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ],
-        );
-      }).toList(),
     );
   }
 }

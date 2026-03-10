@@ -292,8 +292,8 @@ class _WorkerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 3),
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      margin: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 6),
       decoration: BoxDecoration(
         color: worker.shift.bgColor,
         borderRadius: BorderRadius.circular(6),
@@ -312,6 +312,7 @@ class _WorkerCard extends StatelessWidget {
               color: worker.shift.color,
             ),
           ),
+          const SizedBox(height: 2),
           Text(
             worker.name,
             style: TextStyle(

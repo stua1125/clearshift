@@ -57,53 +57,50 @@ class _ShiftTypeFormSheetState extends State<ShiftTypeFormSheet> {
       padding: EdgeInsets.only(
         left: AppSpacing.xxl,
         right: AppSpacing.xxl,
-        top: AppSpacing.lg,
+        top: AppSpacing.md,
         bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.xxl,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            widget.initial != null ? '근무타입 편집' : '새 근무타입',
-            style: Theme.of(context).textTheme.titleMedium,
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.close, size: 24),
+                onPressed: () => Navigator.pop(context),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    widget.initial != null ? '근무타입 편집' : '새 근무타입',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 24),
+            ],
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.xl),
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(labelText: '이름'),
+            decoration: const InputDecoration(
+              labelText: '근무 명칭',
+              hintText: '예: 오전근무',
+            ),
           ),
           const SizedBox(height: AppSpacing.md),
           TextField(
             controller: _abbrController,
-            decoration: const InputDecoration(labelText: '약어 (1~3자)'),
+            decoration: const InputDecoration(
+              labelText: '약칭',
+              hintText: '예: 오전',
+            ),
             maxLength: 3,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text('색상', style: Theme.of(context).textTheme.bodySmall),
-          const SizedBox(height: AppSpacing.xs),
-          Wrap(
-            spacing: 8,
-            children: _presetColors.map((preset) {
-              final isSelected = _selectedColor == preset.color;
-              return GestureDetector(
-                onTap: () => setState(() {
-                  _selectedColor = preset.color;
-                  _selectedBgColor = preset.bg;
-                }),
-                child: Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: preset.color,
-                    shape: BoxShape.circle,
-                    border: isSelected
-                        ? Border.all(color: AppColors.textPrimary, width: 2)
-                        : null,
-                  ),
-                ),
-              );
-            }).toList(),
           ),
           const SizedBox(height: AppSpacing.md),
           DropdownButtonFormField<ShiftCategory>(
@@ -112,7 +109,7 @@ class _ShiftTypeFormSheetState extends State<ShiftTypeFormSheet> {
             items: const [
               DropdownMenuItem(
                 value: ShiftCategory.work,
-                child: Text('근무조'),
+                child: Text('일반 근무'),
               ),
               DropdownMenuItem(
                 value: ShiftCategory.leave,
@@ -127,16 +124,55 @@ class _ShiftTypeFormSheetState extends State<ShiftTypeFormSheet> {
               if (v != null) setState(() => _category = v);
             },
           ),
+          const SizedBox(height: AppSpacing.lg),
+          Text('색상', style: Theme.of(context).textTheme.bodySmall),
+          const SizedBox(height: AppSpacing.sm),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: _presetColors.map((preset) {
+              final isSelected = _selectedColor == preset.color;
+              return Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: GestureDetector(
+                  onTap: () => setState(() {
+                    _selectedColor = preset.color;
+                    _selectedBgColor = preset.bg;
+                  }),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: preset.color,
+                      shape: BoxShape.circle,
+                      border: isSelected
+                          ? Border.all(color: AppColors.textPrimary, width: 3)
+                          : null,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
           const SizedBox(height: AppSpacing.xl),
           SizedBox(
             width: double.infinity,
+            height: 48,
             child: ElevatedButton(
               onPressed: _save,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.onPrimary,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              child: const Text('저장'),
+              child: const Text(
+                '저장',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ),
         ],

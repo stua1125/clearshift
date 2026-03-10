@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../shared/models/shift_type.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
-import 'shift_badge.dart';
 
 class PaintToolbar extends StatelessWidget {
   const PaintToolbar({
@@ -23,53 +22,46 @@ class PaintToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '근무 타입 선택',
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                _PaintToggle(
-                  isPaintMode: isPaintMode,
-                  onToggle: onTogglePaint,
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Wrap(
-              spacing: 6,
-              runSpacing: 6,
-              children: [
-                ...shiftTypes.map((type) => _ShiftTypeButton(
-                      shiftType: type,
-                      isSelected: selectedType?.id == type.id,
-                      isPaintMode: isPaintMode,
-                      onTap: () => onSelectType(
-                        selectedType?.id == type.id ? null : type,
-                      ),
-                    )),
-                _EraseButton(
-                  isSelected: isPaintMode && selectedType == null,
-                  onTap: () => onSelectType(null),
-                ),
-              ],
-            ),
-          ],
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.bottomSheetRadius),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0x0F000000),
+            blurRadius: 10,
+            offset: Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _PaintToggleRow(
+            isPaintMode: isPaintMode,
+            onToggle: onTogglePaint,
+          ),
+          if (isPaintMode) ...[
+            if (selectedType != null)
+              _SelectedIndicator(shiftType: selectedType!),
+            const SizedBox(height: AppSpacing.sm),
+            _ShiftButtonsRow(
+              shiftTypes: shiftTypes,
+              selectedType: selectedType,
+              onSelectType: onSelectType,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+          ],
+        ],
       ),
     );
   }
 }
 
-class _PaintToggle extends StatelessWidget {
-  const _PaintToggle({
+class _PaintToggleRow extends StatelessWidget {
+  const _PaintToggleRow({
     required this.isPaintMode,
     required this.onToggle,
   });
@@ -79,77 +71,165 @@ class _PaintToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onToggle,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: isPaintMode ? AppColors.primary : AppColors.surfaceVariant,
-          borderRadius: BorderRadius.circular(AppSpacing.buttonBorderRadius),
-        ),
-        child: Text(
-          isPaintMode ? 'Paint ON' : 'Paint OFF',
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-            color: isPaintMode ? AppColors.onPrimary : AppColors.textSecondary,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.lg,
+        vertical: AppSpacing.md,
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.brush_rounded,
+            size: 20,
+            color: isPaintMode ? AppColors.primary : AppColors.textSecondary,
           ),
-        ),
+          const SizedBox(width: AppSpacing.sm),
+          Text(
+            'Paint Mode',
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color:
+                  isPaintMode ? AppColors.textPrimary : AppColors.textSecondary,
+            ),
+          ),
+          const Spacer(),
+          Switch.adaptive(
+            value: isPaintMode,
+            onChanged: (_) => onToggle(),
+            activeTrackColor: AppColors.primary,
+            activeThumbColor: AppColors.onPrimary,
+          ),
+        ],
       ),
     );
   }
 }
 
-class _ShiftTypeButton extends StatelessWidget {
-  const _ShiftTypeButton({
+class _SelectedIndicator extends StatelessWidget {
+  const _SelectedIndicator({required this.shiftType});
+
+  final ShiftType shiftType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      child: Row(
+        children: [
+          Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(
+              color: shiftType.color,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Text(
+            '${shiftType.name} 선택됨',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: shiftType.color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ShiftButtonsRow extends StatelessWidget {
+  const _ShiftButtonsRow({
+    required this.shiftTypes,
+    this.selectedType,
+    required this.onSelectType,
+  });
+
+  final List<ShiftType> shiftTypes;
+  final ShiftType? selectedType;
+  final ValueChanged<ShiftType?> onSelectType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ...shiftTypes.map((type) => _CircularShiftButton(
+                shiftType: type,
+                isSelected: selectedType?.id == type.id,
+                onTap: () => onSelectType(
+                  selectedType?.id == type.id ? null : type,
+                ),
+              )),
+          _CircularEraseButton(
+            isSelected: selectedType == null,
+            onTap: () => onSelectType(null),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CircularShiftButton extends StatelessWidget {
+  const _CircularShiftButton({
     required this.shiftType,
     required this.isSelected,
-    required this.isPaintMode,
     required this.onTap,
   });
 
   final ShiftType shiftType;
   final bool isSelected;
-  final bool isPaintMode;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: isPaintMode ? onTap : null,
-      child: AnimatedScale(
-        scale: isSelected ? 1.05 : 1.0,
-        duration: const Duration(milliseconds: 150),
-        child: AnimatedOpacity(
-          opacity: isPaintMode ? (isSelected ? 1.0 : 0.6) : 0.4,
-          duration: const Duration(milliseconds: 150),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: shiftType.color,
-                  shape: BoxShape.circle,
-                ),
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: shiftType.bgColor,
+              shape: BoxShape.circle,
+              border: isSelected
+                  ? Border.all(color: AppColors.primary, width: 2.5)
+                  : null,
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              shiftType.abbreviation,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: shiftType.color,
               ),
-              const SizedBox(width: 4),
-              ShiftBadge(
-                shiftType: shiftType,
-                size: ShiftBadgeSize.lg,
-                selected: isSelected,
-              ),
-            ],
+            ),
           ),
-        ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            shiftType.name,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _EraseButton extends StatelessWidget {
-  const _EraseButton({
+class _CircularEraseButton extends StatelessWidget {
+  const _CircularEraseButton({
     required this.isSelected,
     required this.onTap,
   });
@@ -161,19 +241,36 @@ class _EraseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        height: 28,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.surfaceVariant : AppColors.surface,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: isSelected ? AppColors.textSecondary : AppColors.border,
-            width: isSelected ? 1.5 : 1,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: AppColors.surfaceVariant,
+              shape: BoxShape.circle,
+              border: isSelected
+                  ? Border.all(color: AppColors.primary, width: 2.5)
+                  : null,
+            ),
+            alignment: Alignment.center,
+            child: const Icon(
+              Icons.auto_fix_high_rounded,
+              size: 22,
+              color: AppColors.textSecondary,
+            ),
           ),
-        ),
-        alignment: Alignment.center,
-        child: const Text('지우기', style: TextStyle(fontSize: 12)),
+          const SizedBox(height: AppSpacing.xs),
+          const Text(
+            '지우개',
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }
