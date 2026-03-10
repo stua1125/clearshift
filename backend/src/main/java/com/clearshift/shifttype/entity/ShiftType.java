@@ -46,6 +46,12 @@ public class ShiftType {
     @Builder.Default
     private int sortOrder = 0;
 
+    @Column(name = "start_time", length = 5)
+    private String startTime;
+
+    @Column(name = "end_time", length = 5)
+    private String endTime;
+
     @Column(name = "is_active", nullable = false)
     @Builder.Default
     private boolean isActive = true;

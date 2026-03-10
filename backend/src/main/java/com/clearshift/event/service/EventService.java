@@ -22,6 +22,11 @@ public class EventService {
         return eventRepository.findByBranchIdOrderByStartDateAsc(manager.getBranch().getId());
     }
 
+    public List<CalendarEvent> searchEvents(User manager, String keyword) {
+        return eventRepository.findByBranchIdAndTitleContainingIgnoreCaseOrderByStartDateAsc(
+            manager.getBranch().getId(), keyword);
+    }
+
     @Transactional
     public CalendarEvent create(User manager, CalendarEvent event) {
         event.setBranch(manager.getBranch());

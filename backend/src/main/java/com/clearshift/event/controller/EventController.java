@@ -23,9 +23,14 @@ public class EventController {
     private final EventService eventService;
 
     @Operation(summary = "이벤트 목록 조회",
-            description = "매니저 소속 지점의 이벤트를 시작일 오름차순으로 반환합니다.")
+            description = "매니저 소속 지점의 이벤트를 시작일 오름차순으로 반환합니다. q 파라미터로 제목 검색 가능.")
     @GetMapping
-    public ResponseEntity<List<CalendarEvent>> list(@AuthenticationPrincipal User user) {
+    public ResponseEntity<List<CalendarEvent>> list(
+            @AuthenticationPrincipal User user,
+            @Parameter(description = "검색어 (제목)") @RequestParam(required = false) String q) {
+        if (q != null && !q.isBlank()) {
+            return ResponseEntity.ok(eventService.searchEvents(user, q.trim()));
+        }
         return ResponseEntity.ok(eventService.getEvents(user));
     }
 

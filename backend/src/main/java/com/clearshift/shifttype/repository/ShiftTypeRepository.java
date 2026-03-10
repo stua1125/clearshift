@@ -8,5 +8,6 @@ import java.util.UUID;
 
 public interface ShiftTypeRepository extends JpaRepository<ShiftType, UUID> {
     List<ShiftType> findByBranchIdAndIsActiveTrueOrderBySortOrder(UUID branchId);
+    List<ShiftType> findByBranchIdAndIsActiveFalseOrderBySortOrder(UUID branchId);
     List<ShiftType> findByBranchIdOrderBySortOrder(UUID branchId);
 }

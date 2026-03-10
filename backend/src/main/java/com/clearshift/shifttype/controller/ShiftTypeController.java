@@ -23,10 +23,12 @@ public class ShiftTypeController {
     private final ShiftTypeService shiftTypeService;
 
     @Operation(summary = "근무타입 목록 조회",
-            description = "매니저 소속 지점의 전체 근무타입을 sortOrder 순으로 반환합니다.")
+            description = "매니저 소속 지점의 근무타입을 sortOrder 순으로 반환합니다. status 파라미터로 필터링 가능 (all/active/inactive).")
     @GetMapping
-    public ResponseEntity<List<ShiftType>> list(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(shiftTypeService.getShiftTypes(user));
+    public ResponseEntity<List<ShiftType>> list(
+            @AuthenticationPrincipal User user,
+            @Parameter(description = "필터: all, active, inactive") @RequestParam(defaultValue = "all") String status) {
+        return ResponseEntity.ok(shiftTypeService.getShiftTypesByStatus(user, status));
     }
 
     @Operation(summary = "근무타입 생성",

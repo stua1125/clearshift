@@ -22,6 +22,15 @@ public class ShiftTypeService {
         return shiftTypeRepository.findByBranchIdOrderBySortOrder(manager.getBranch().getId());
     }
 
+    public List<ShiftType> getShiftTypesByStatus(User manager, String status) {
+        UUID branchId = manager.getBranch().getId();
+        return switch (status) {
+            case "active" -> shiftTypeRepository.findByBranchIdAndIsActiveTrueOrderBySortOrder(branchId);
+            case "inactive" -> shiftTypeRepository.findByBranchIdAndIsActiveFalseOrderBySortOrder(branchId);
+            default -> shiftTypeRepository.findByBranchIdOrderBySortOrder(branchId);
+        };
+    }
+
     @Transactional
     public ShiftType create(User manager, ShiftType shiftType) {
         shiftType.setBranch(manager.getBranch());
@@ -38,6 +47,8 @@ public class ShiftTypeService {
         existing.setColor(updated.getColor());
         existing.setBgColor(updated.getBgColor());
         existing.setCategory(updated.getCategory());
+        existing.setStartTime(updated.getStartTime());
+        existing.setEndTime(updated.getEndTime());
         return shiftTypeRepository.save(existing);
     }
 

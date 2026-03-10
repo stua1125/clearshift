@@ -11,4 +11,5 @@ public interface EventRepository extends JpaRepository<CalendarEvent, UUID> {
     List<CalendarEvent> findByBranchIdOrderByStartDateAsc(UUID branchId);
     List<CalendarEvent> findByBranchIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByStartDateAsc(
         UUID branchId, LocalDate endOfMonth, LocalDate startOfMonth);
+    List<CalendarEvent> findByBranchIdAndTitleContainingIgnoreCaseOrderByStartDateAsc(UUID branchId, String keyword);
 }
