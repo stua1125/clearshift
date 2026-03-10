@@ -26,11 +26,11 @@ class _ShiftTypeFormSheetState extends State<ShiftTypeFormSheet> {
   late ShiftCategory _category;
 
   static const _presetColors = [
-    (color: AppColors.shiftDay, bg: AppColors.shiftDayBg, label: '파랑'),
+    (color: AppColors.shiftMorning, bg: AppColors.shiftMorningBg, label: '파랑'),
     (color: AppColors.shiftNight, bg: AppColors.shiftNightBg, label: '보라'),
-    (color: AppColors.shiftOff, bg: AppColors.shiftOffBg, label: '초록'),
-    (color: AppColors.shiftVacation, bg: AppColors.shiftVacationBg, label: '주황'),
-    (color: AppColors.shiftTraining, bg: AppColors.shiftTrainingBg, label: '분홍'),
+    (color: AppColors.shiftAfternoon, bg: AppColors.shiftAfternoonBg, label: '주황'),
+    (color: AppColors.shiftOff, bg: AppColors.shiftOffBg, label: '회색'),
+    (color: AppColors.shiftEvening, bg: AppColors.shiftEveningBg, label: '초록'),
   ];
 
   @override

@@ -82,7 +82,7 @@ abstract final class AppTheme {
             top: Radius.circular(AppSpacing.bottomSheetRadius),
           ),
         ),
-        showDragHandle: true,
+        showDragHandle: false,
         dragHandleColor: colorScheme.outlineVariant,
       ),
       navigationBarTheme: NavigationBarThemeData(

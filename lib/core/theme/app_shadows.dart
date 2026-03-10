@@ -21,6 +21,21 @@ abstract final class AppShadows {
     ),
   ];
 
+  static const List<BoxShadow> lg = [
+    BoxShadow(
+      offset: Offset(0, 8),
+      blurRadius: 25,
+      spreadRadius: -5,
+      color: Color(0x1A000000),
+    ),
+    BoxShadow(
+      offset: Offset(0, 8),
+      blurRadius: 10,
+      spreadRadius: -6,
+      color: Color(0x1A000000),
+    ),
+  ];
+
   static List<BoxShadow> focus = [
     BoxShadow(
       offset: Offset.zero,

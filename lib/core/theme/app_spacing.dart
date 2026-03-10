@@ -16,16 +16,17 @@ abstract final class AppSpacing {
   static const double cellBorderRadius = 0;
 
   // Card
-  static const double cardBorderRadius = 12;
+  static const double cardBorderRadius = 16;
+  static const double cardBorderRadiusLg = 24;
   static const double cardPadding = 16;
   static const double cardElevation = 0;
 
   // Bottom Sheet
-  static const double bottomSheetRadius = 20;
+  static const double bottomSheetRadius = 24;
 
   // Input
-  static const double inputBorderRadius = 10;
+  static const double inputBorderRadius = 12;
 
   // Button
-  static const double buttonBorderRadius = 8;
+  static const double buttonBorderRadius = 12;
 }

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/manager/events/presentation/events_screen.dart';
 import '../../features/manager/shift_types/presentation/shift_types_screen.dart';
 import '../../features/manager/vacation_settings/presentation/vacation_settings_screen.dart';
+import '../../features/settings/presentation/settings_hub_screen.dart';
 import '../../features/shared_calendar/presentation/shared_calendar_screen.dart';
 import '../../features/worker/calendar/presentation/worker_calendar_screen.dart';
 import '../theme/app_colors.dart';
@@ -12,7 +13,7 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: '/shared/calendar',
+  initialLocation: '/home',
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
@@ -22,7 +23,7 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/shared/calendar',
+              path: '/home',
               builder: (context, state) => const SharedCalendarScreen(),
             ),
           ],
@@ -30,7 +31,7 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/worker/calendar',
+              path: '/schedule',
               builder: (context, state) => const WorkerCalendarScreen(),
             ),
           ],
@@ -38,19 +39,27 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/manager/shift-types',
-              builder: (context, state) => const ShiftTypesScreen(),
+              path: '/settings',
+              builder: (context, state) => const SettingsHubScreen(),
             ),
           ],
         ),
       ],
     ),
+    // Settings sub-screens (push with back arrow, no bottom nav)
     GoRoute(
-      path: '/manager/vacation-settings',
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/settings/shift-types',
+      builder: (context, state) => const ShiftTypesScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/settings/vacation',
       builder: (context, state) => const VacationSettingsScreen(),
     ),
     GoRoute(
-      path: '/manager/events',
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/settings/events',
       builder: (context, state) => const EventsScreen(),
     ),
   ],
@@ -79,18 +88,18 @@ class _ScaffoldWithNav extends StatelessWidget {
               initialLocation: index == navigationShell.currentIndex,
             );
           },
-          height: 60,
+          height: 64,
           indicatorColor: AppColors.primaryContainer,
           destinations: const [
             NavigationDestination(
-              icon: Icon(Icons.calendar_month_outlined),
-              selectedIcon: Icon(Icons.calendar_month),
-              label: '공유 캘린더',
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home),
+              label: '홈',
             ),
             NavigationDestination(
               icon: Icon(Icons.edit_calendar_outlined),
               selectedIcon: Icon(Icons.edit_calendar),
-              label: '근무 신청',
+              label: '근무신청',
             ),
             NavigationDestination(
               icon: Icon(Icons.settings_outlined),

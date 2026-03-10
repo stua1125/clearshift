@@ -15,6 +15,8 @@ _ShiftType _$ShiftTypeFromJson(Map<String, dynamic> json) => _ShiftType(
   category: $enumDecode(_$ShiftCategoryEnumMap, json['category']),
   sortOrder: (json['sortOrder'] as num?)?.toInt() ?? 0,
   isActive: json['isActive'] as bool? ?? true,
+  startTime: json['startTime'] as String?,
+  endTime: json['endTime'] as String?,
 );
 
 Map<String, dynamic> _$ShiftTypeToJson(_ShiftType instance) =>
@@ -27,6 +29,8 @@ Map<String, dynamic> _$ShiftTypeToJson(_ShiftType instance) =>
       'category': _$ShiftCategoryEnumMap[instance.category]!,
       'sortOrder': instance.sortOrder,
       'isActive': instance.isActive,
+      'startTime': instance.startTime,
+      'endTime': instance.endTime,
     };
 
 const _$ShiftCategoryEnumMap = {

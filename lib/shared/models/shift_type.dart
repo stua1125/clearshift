@@ -17,6 +17,8 @@ abstract class ShiftType with _$ShiftType {
     required ShiftCategory category,
     @Default(0) int sortOrder,
     @Default(true) bool isActive,
+    String? startTime,
+    String? endTime,
   }) = _ShiftType;
 
   factory ShiftType.fromJson(Map<String, dynamic> json) =>

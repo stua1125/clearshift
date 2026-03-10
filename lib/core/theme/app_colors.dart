@@ -27,17 +27,23 @@ abstract final class AppColors {
   static const warning = Color(0xFFFF9100);
   static const error = Color(0xFFFF3B30);
 
-  // Shift Type Colors (vibrant, TimeTree-inspired)
-  static const shiftDay = Color(0xFF0064FF);
-  static const shiftDayBg = Color(0xFFE8F0FE);
-  static const shiftNight = Color(0xFF6C5CE7);
+  // Shift Type Colors (Figma design)
+  static const shiftMorning = Color(0xFF0064FF);     // MD 오전근무
+  static const shiftMorningBg = Color(0xFFE8F0FE);
+  static const shiftAfternoon = Color(0xFFFF9100);   // AF 오후근무
+  static const shiftAfternoonBg = Color(0xFFFFF3E0);
+  static const shiftNight = Color(0xFF6C5CE7);       // NI 야간근무
   static const shiftNightBg = Color(0xFFF0EDFF);
-  static const shiftOff = Color(0xFF00B894);
-  static const shiftOffBg = Color(0xFFE6F9F3);
-  static const shiftVacation = Color(0xFFFF9100);
-  static const shiftVacationBg = Color(0xFFFFF3E0);
-  static const shiftTraining = Color(0xFFFF3B30);
-  static const shiftTrainingBg = Color(0xFFFFEBEE);
+  static const shiftOff = Color(0xFF94A3B8);          // HD 휴무
+  static const shiftOffBg = Color(0xFFF1F5F9);
+  static const shiftEvening = Color(0xFF00B894);      // E 이브닝 (보조)
+  static const shiftEveningBg = Color(0xFFE6F9F3);
+
+  // Legacy aliases for backward compatibility
+  static const shiftDay = shiftMorning;
+  static const shiftDayBg = shiftMorningBg;
+  static const shiftVacation = shiftAfternoon;
+  static const shiftVacationBg = shiftAfternoonBg;
 
   // Calendar
   static const calendarSunday = Color(0xFFFF3B30);

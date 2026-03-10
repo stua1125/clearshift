@@ -35,11 +35,11 @@ class _MemberRow extends StatelessWidget {
 
   Color get _avatarColor {
     final colors = [
-      AppColors.shiftDay,
+      AppColors.shiftMorning,
+      AppColors.shiftAfternoon,
       AppColors.shiftNight,
       AppColors.shiftOff,
-      AppColors.shiftVacation,
-      AppColors.shiftTraining,
+      AppColors.shiftEvening,
     ];
     return colors[member.name.hashCode.abs() % colors.length];
   }
