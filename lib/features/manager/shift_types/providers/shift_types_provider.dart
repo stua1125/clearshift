@@ -21,6 +21,13 @@ class ShiftTypesNotifier extends StateNotifier<List<ShiftType>> {
     state = state.where((t) => t.id != id).toList();
   }
 
+  void deactivate(String id) {
+    state = [
+      for (final t in state)
+        if (t.id == id) t.copyWith(isActive: false) else t,
+    ];
+  }
+
   void reorder(int oldIndex, int newIndex) {
     if (newIndex > oldIndex) newIndex--;
     final items = List<ShiftType>.from(state);

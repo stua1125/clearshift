@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/manager/calendar/presentation/manager_calendar_screen.dart';
 import '../../features/manager/events/presentation/events_screen.dart';
 import '../../features/manager/shift_types/presentation/shift_types_screen.dart';
+import '../../features/manager/team/presentation/member_schedule_screen.dart';
 import '../../features/manager/vacation_settings/presentation/vacation_settings_screen.dart';
 import '../../features/settings/presentation/settings_hub_screen.dart';
 import '../../features/shared_calendar/presentation/shared_calendar_screen.dart';
@@ -61,6 +63,22 @@ final appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       path: '/settings/events',
       builder: (context, state) => const EventsScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/settings/team-calendar',
+      builder: (context, state) => const ManagerCalendarScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/settings/team-calendar/member',
+      builder: (context, state) {
+        final extra = state.extra as Map<String, dynamic>;
+        return MemberScheduleScreen(
+          memberId: extra['memberId'] as String,
+          memberName: extra['memberName'] as String,
+        );
+      },
     ),
   ],
 );

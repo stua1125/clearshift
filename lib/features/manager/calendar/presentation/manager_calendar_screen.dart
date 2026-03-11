@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -46,7 +47,18 @@ class ManagerCalendarScreen extends ConsumerWidget {
                 },
               ),
               const SizedBox(height: AppSpacing.lg),
-              TeamOverviewCard(members: state.teamMembers),
+              TeamOverviewCard(
+                members: state.teamMembers,
+                onMemberTap: (member) {
+                  context.push(
+                    '/settings/team-calendar/member',
+                    extra: {
+                      'memberId': member.id,
+                      'memberName': member.name,
+                    },
+                  );
+                },
+              ),
             ],
           ),
         ),

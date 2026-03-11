@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../shared/models/calendar_event.dart';
 import '../providers/events_provider.dart';
 import 'widgets/event_form_sheet.dart';
@@ -71,7 +72,25 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                       return _EventCard(
                         event: event,
                         onTap: () => _showEditSheet(context, notifier, event),
-                        onDelete: () => notifier.remove(event.id),
+                        onDelete: () async {
+                          final confirmed = await showConfirmDialog(
+                            context,
+                            title: '이벤트 삭제',
+                            message: '이 이벤트를 삭제하시겠습니까?',
+                            confirmText: '삭제',
+                            isDestructive: true,
+                          );
+                          if (confirmed) {
+                            notifier.remove(event.id);
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('이벤트가 삭제되었습니다'),
+                                ),
+                              );
+                            }
+                          }
+                        },
                       );
                     },
                   ),

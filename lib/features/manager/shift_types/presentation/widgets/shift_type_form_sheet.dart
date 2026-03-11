@@ -19,6 +19,7 @@ class ShiftTypeFormSheet extends StatefulWidget {
 }
 
 class _ShiftTypeFormSheetState extends State<ShiftTypeFormSheet> {
+  final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   late final TextEditingController _abbrController;
   late Color _selectedColor;
@@ -60,7 +61,9 @@ class _ShiftTypeFormSheetState extends State<ShiftTypeFormSheet> {
         top: AppSpacing.md,
         bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.xxl,
       ),
-      child: Column(
+      child: Form(
+        key: _formKey,
+        child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -86,21 +89,33 @@ class _ShiftTypeFormSheetState extends State<ShiftTypeFormSheet> {
             ],
           ),
           const SizedBox(height: AppSpacing.xl),
-          TextField(
+          TextFormField(
             controller: _nameController,
             decoration: const InputDecoration(
               labelText: '근무 명칭',
               hintText: '예: 오전근무',
             ),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return '근무 명칭을 입력해주세요';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: AppSpacing.md),
-          TextField(
+          TextFormField(
             controller: _abbrController,
             decoration: const InputDecoration(
               labelText: '약칭',
               hintText: '예: 오전',
             ),
             maxLength: 3,
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return '약칭을 입력해주세요';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: AppSpacing.md),
           DropdownButtonFormField<ShiftCategory>(
@@ -177,13 +192,19 @@ class _ShiftTypeFormSheetState extends State<ShiftTypeFormSheet> {
           ),
         ],
       ),
+      ),
     );
   }
 
   void _save() {
+    if (!_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('필수 항목을 입력해주세요')),
+      );
+      return;
+    }
     final name = _nameController.text.trim();
     final abbr = _abbrController.text.trim();
-    if (name.isEmpty || abbr.isEmpty) return;
 
     widget.onSave(ShiftType(
       id: widget.initial?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),

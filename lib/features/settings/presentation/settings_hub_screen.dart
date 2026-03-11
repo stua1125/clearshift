@@ -17,6 +17,13 @@ class SettingsHubScreen extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.lg),
         children: [
           _SettingsTile(
+            icon: Icons.people_outlined,
+            title: '팀 캘린더',
+            subtitle: '팀원 스케줄 조회 및 관리',
+            onTap: () => context.push('/settings/team-calendar'),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          _SettingsTile(
             icon: Icons.work_history_outlined,
             title: '근무타입 관리',
             subtitle: '근무타입 추가, 수정, 삭제',

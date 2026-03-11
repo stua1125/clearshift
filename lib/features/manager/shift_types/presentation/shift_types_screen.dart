@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../shared/models/shift_type.dart';
 import '../providers/shift_types_provider.dart';
 import 'widgets/shift_type_form_sheet.dart';
@@ -41,7 +42,7 @@ class _ShiftTypesScreenState extends ConsumerState<ShiftTypesScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            onPressed: () {},
+            onPressed: () => _showOptionsSheet(context),
           ),
         ],
       ),
@@ -61,6 +62,8 @@ class _ShiftTypesScreenState extends ConsumerState<ShiftTypesScreen> {
                 return _ShiftTypeItem(
                   key: ValueKey(type.id),
                   shiftType: type,
+                  onEdit: () => _showEditSheet(context, notifier, type),
+                  onDeactivate: () => _confirmDeactivate(context, notifier, type),
                 );
               },
             ),
@@ -83,6 +86,72 @@ class _ShiftTypesScreenState extends ConsumerState<ShiftTypesScreen> {
           notifier.add(type);
           Navigator.pop(context);
         },
+      ),
+    );
+  }
+
+  void _showEditSheet(
+    BuildContext context,
+    ShiftTypesNotifier notifier,
+    ShiftType type,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => ShiftTypeFormSheet(
+        initial: type,
+        onSave: (updated) {
+          notifier.update(updated);
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  Future<void> _confirmDeactivate(
+    BuildContext context,
+    ShiftTypesNotifier notifier,
+    ShiftType type,
+  ) async {
+    final confirmed = await showConfirmDialog(
+      context,
+      title: '근무타입 비활성화',
+      message: '이 근무타입을 비활성화하시겠습니까?',
+      confirmText: '비활성화',
+      isDestructive: true,
+    );
+    if (confirmed) {
+      notifier.deactivate(type.id);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('근무타입이 비활성화되었습니다')),
+        );
+      }
+    }
+  }
+
+  void _showOptionsSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.sort),
+              title: const Text('정렬 순서 변경'),
+              onTap: () => Navigator.pop(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.visibility_off_outlined),
+              title: const Text('비활성 타입 숨기기'),
+              onTap: () {
+                Navigator.pop(context);
+                setState(() => _filterStatus = 'active');
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -146,9 +215,13 @@ class _ShiftTypeItem extends StatelessWidget {
   const _ShiftTypeItem({
     super.key,
     required this.shiftType,
+    required this.onEdit,
+    required this.onDeactivate,
   });
 
   final ShiftType shiftType;
+  final VoidCallback onEdit;
+  final VoidCallback onDeactivate;
 
   @override
   Widget build(BuildContext context) {
@@ -156,62 +229,129 @@ class _ShiftTypeItem extends StatelessWidget {
         ? ' | ${shiftType.startTime} - ${shiftType.endTime}'
         : '';
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.sm,
-          vertical: AppSpacing.md,
-        ),
-        child: Row(
-          children: [
-            const Icon(
-              Icons.drag_handle,
-              color: AppColors.textTertiary,
-              size: 24,
-            ),
-            const SizedBox(width: AppSpacing.sm),
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: shiftType.bgColor,
-                shape: BoxShape.circle,
+    return GestureDetector(
+      onLongPress: () => _showContextMenu(context),
+      child: Card(
+        margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.md,
+          ),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.drag_handle,
+                color: AppColors.textTertiary,
+                size: 24,
               ),
-              alignment: Alignment.center,
-              child: Text(
-                shiftType.abbreviation,
-                style: TextStyle(
-                  color: shiftType.color,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 14,
+              const SizedBox(width: AppSpacing.sm),
+              Opacity(
+                opacity: shiftType.isActive ? 1.0 : 0.4,
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: shiftType.bgColor,
+                    shape: BoxShape.circle,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    shiftType.abbreviation,
+                    style: TextStyle(
+                      color: shiftType.color,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${shiftType.name} (${shiftType.abbreviation})',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textPrimary,
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          '${shiftType.name} (${shiftType.abbreviation})',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: shiftType.isActive
+                                ? AppColors.textPrimary
+                                : AppColors.textTertiary,
+                          ),
+                        ),
+                        if (!shiftType.isActive) ...[
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.surfaceVariant,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Text(
+                              '비활성',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: AppColors.textTertiary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    '약어: ${shiftType.abbreviation}$timeRange',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textSecondary,
+                    const SizedBox(height: 2),
+                    Text(
+                      '약어: ${shiftType.abbreviation}$timeRange',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showContextMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.edit_outlined),
+              title: const Text('편집'),
+              onTap: () {
+                Navigator.pop(context);
+                onEdit();
+              },
             ),
+            if (shiftType.isActive)
+              ListTile(
+                leading: Icon(Icons.visibility_off_outlined,
+                    color: AppColors.error),
+                title: Text(
+                  '비활성화',
+                  style: TextStyle(color: AppColors.error),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  onDeactivate();
+                },
+              ),
           ],
         ),
       ),

@@ -3,13 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/widgets/confirm_dialog.dart';
 import '../providers/vacation_settings_provider.dart';
 
-class VacationSettingsScreen extends ConsumerWidget {
+class VacationSettingsScreen extends ConsumerStatefulWidget {
   const VacationSettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<VacationSettingsScreen> createState() =>
+      _VacationSettingsScreenState();
+}
+
+class _VacationSettingsScreenState
+    extends ConsumerState<VacationSettingsScreen> {
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(vacationSettingsProvider);
     final notifier = ref.read(vacationSettingsProvider.notifier);
 
@@ -65,7 +73,18 @@ class VacationSettingsScreen extends ConsumerWidget {
                     ),
                   ),
                   deleteIcon: Icon(Icons.close, size: 16, color: AppColors.primary),
-                  onDeleted: () => notifier.removeOverride(entry.key),
+                  onDeleted: () async {
+                    final confirmed = await showConfirmDialog(
+                      context,
+                      title: '예외 설정 삭제',
+                      message: '${entry.key}일의 예외 설정을 삭제하시겠습니까?',
+                      confirmText: '삭제',
+                      isDestructive: true,
+                    );
+                    if (confirmed) {
+                      notifier.removeOverride(entry.key);
+                    }
+                  },
                 );
               }).toList(),
             ),

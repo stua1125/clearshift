@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -8,11 +9,17 @@ import '../../../../core/widgets/paint_toolbar.dart';
 import '../../../../core/widgets/submit_bar.dart';
 import 'providers/calendar_provider.dart';
 
-class WorkerCalendarScreen extends ConsumerWidget {
+class WorkerCalendarScreen extends ConsumerStatefulWidget {
   const WorkerCalendarScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<WorkerCalendarScreen> createState() =>
+      _WorkerCalendarScreenState();
+}
+
+class _WorkerCalendarScreenState extends ConsumerState<WorkerCalendarScreen> {
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(workerCalendarProvider);
     final notifier = ref.read(workerCalendarProvider.notifier);
     final daysInMonth = DateTime(state.year, state.month + 1, 0).day;
@@ -34,7 +41,7 @@ class WorkerCalendarScreen extends ConsumerWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => context.push('/settings'),
             icon: const Icon(Icons.settings_outlined, size: 22),
           ),
         ],
@@ -77,7 +84,7 @@ class WorkerCalendarScreen extends ConsumerWidget {
                 filledCount: state.assignments.length,
                 totalDays: daysInMonth,
                 status: state.submissionStatus,
-                onSubmit: notifier.submitSchedule,
+                onSubmit: () => _handleSubmit(notifier, state, daysInMonth),
               ),
             )
           else ...[
@@ -87,7 +94,7 @@ class WorkerCalendarScreen extends ConsumerWidget {
                 filledCount: state.assignments.length,
                 totalDays: daysInMonth,
                 status: state.submissionStatus,
-                onSubmit: notifier.submitSchedule,
+                onSubmit: () => _handleSubmit(notifier, state, daysInMonth),
               ),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -102,6 +109,22 @@ class WorkerCalendarScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  void _handleSubmit(
+    WorkerCalendarNotifier notifier,
+    dynamic state,
+    int daysInMonth,
+  ) {
+    final previousStatus = state.submissionStatus;
+    notifier.submitSchedule();
+    final newStatus = ref.read(workerCalendarProvider).submissionStatus;
+    if (previousStatus != SubmissionStatus.submitted &&
+        newStatus == SubmissionStatus.submitted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('스케줄이 제출되었습니다')),
+      );
+    }
   }
 }
 

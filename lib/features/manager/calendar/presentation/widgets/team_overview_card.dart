@@ -6,9 +6,14 @@ import '../../../../../core/widgets/submit_bar.dart';
 import '../../providers/manager_calendar_provider.dart';
 
 class TeamOverviewCard extends StatelessWidget {
-  const TeamOverviewCard({super.key, required this.members});
+  const TeamOverviewCard({
+    super.key,
+    required this.members,
+    this.onMemberTap,
+  });
 
   final List<TeamMember> members;
+  final void Function(TeamMember member)? onMemberTap;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,10 @@ class TeamOverviewCard extends StatelessWidget {
           children: [
             Text('팀원 현황', style: Theme.of(context).textTheme.titleSmall),
             const SizedBox(height: AppSpacing.md),
-            ...members.map((m) => _MemberRow(member: m)),
+            ...members.map((m) => _MemberRow(
+                  member: m,
+                  onTap: onMemberTap != null ? () => onMemberTap!(m) : null,
+                )),
           ],
         ),
       ),
@@ -29,9 +37,10 @@ class TeamOverviewCard extends StatelessWidget {
 }
 
 class _MemberRow extends StatelessWidget {
-  const _MemberRow({required this.member});
+  const _MemberRow({required this.member, this.onTap});
 
   final TeamMember member;
+  final VoidCallback? onTap;
 
   Color get _avatarColor {
     final colors = [
@@ -46,34 +55,38 @@ class _MemberRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 16,
-            backgroundColor: _avatarColor,
-            child: Text(
-              member.name.substring(0, 1),
-              style: const TextStyle(
-                color: AppColors.textOnColor,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSpacing.sm),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 16,
+              backgroundColor: _avatarColor,
+              child: Text(
+                member.name.substring(0, 1),
+                style: const TextStyle(
+                  color: AppColors.textOnColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Text(
-              member.name,
-              style: Theme.of(context).textTheme.bodyMedium,
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                member.name,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
             ),
-          ),
-          _StatusBadge(
-            status: member.status,
-            filledPercent: member.filledPercent,
-          ),
-        ],
+            _StatusBadge(
+              status: member.status,
+              filledPercent: member.filledPercent,
+            ),
+          ],
+        ),
       ),
     );
   }

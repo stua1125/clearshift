@@ -50,6 +50,7 @@ Google 로그인 → 기존 유저? → JWT 발급 → 홈
 
 설정 허브 메뉴 → 각 하위 화면은 push 방식 (뒤로가기 지원)
 
+- **팀 캘린더** (`/settings/team-calendar`): 팀원 스케줄 조회 및 관리, 팀원 탭 → 개별 스케줄 상세
 - **근무타입 관리** (`/settings/shift-types`): 필터탭(전체/활성/비활성), 드래그 정렬, CRUD
 - **휴가 MAX 관리** (`/settings/vacation`): 기본 인원 + 날짜별 예외 설정
 - **이벤트 관리** (`/settings/events`): 검색 + 이벤트 카드 목록, CRUD
@@ -70,6 +71,8 @@ Google 로그인 → 기존 유저? → JWT 발급 → 홈
 | 8 | 근무타입 추가 폼 | `/settings/shift-types` (바텀시트) | 새 근무타입 생성 폼 |
 | 9 | 휴가 MAX 설정 | `/settings/vacation` | 휴가 인원 제한 관리 |
 | 10 | 이벤트 관리 | `/settings/events` | 이벤트 검색 + 목록 |
+| 11 | 팀 캘린더 | `/settings/team-calendar` | 매니저 팀 스케줄 관리 |
+| 12 | 팀원 스케줄 | `/settings/team-calendar/member` | 개별 팀원 스케줄 상세 |
 
 ---
 
