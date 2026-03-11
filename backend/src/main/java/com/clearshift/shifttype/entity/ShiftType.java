@@ -3,6 +3,8 @@ package com.clearshift.shifttype.entity;
 import com.clearshift.branch.entity.Branch;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -26,15 +28,20 @@ public class ShiftType {
     @JsonIgnore
     private Branch branch;
 
+    @NotBlank
     @Column(nullable = false, length = 50)
     private String name;
 
+    @NotBlank
+    @Size(min = 1, max = 5)
     @Column(nullable = false, length = 5)
     private String abbreviation;
 
+    @NotBlank
     @Column(nullable = false, length = 10)
     private String color;
 
+    @NotBlank
     @Column(name = "bg_color", nullable = false, length = 10)
     private String bgColor;
 

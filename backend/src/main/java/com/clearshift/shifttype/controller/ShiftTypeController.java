@@ -6,8 +6,10 @@ import com.clearshift.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,7 @@ import java.util.UUID;
 @Tag(name = "근무타입", description = "매니저 근무타입 CRUD + 순서 변경")
 @RestController
 @RequestMapping("/api/manager/shift-types")
+@PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class ShiftTypeController {
 
@@ -35,7 +38,7 @@ public class ShiftTypeController {
             description = "새 근무타입을 생성합니다. name, abbreviation(1~3자), color, bgColor, category 필수.")
     @PostMapping
     public ResponseEntity<ShiftType> create(@AuthenticationPrincipal User user,
-                                             @RequestBody ShiftType shiftType) {
+                                             @Valid @RequestBody ShiftType shiftType) {
         return ResponseEntity.ok(shiftTypeService.create(user, shiftType));
     }
 
@@ -44,16 +47,16 @@ public class ShiftTypeController {
     @PutMapping("/{id}")
     public ResponseEntity<ShiftType> update(@AuthenticationPrincipal User user,
                                              @Parameter(description = "근무타입 ID") @PathVariable UUID id,
-                                             @RequestBody ShiftType shiftType) {
+                                             @Valid @RequestBody ShiftType shiftType) {
         return ResponseEntity.ok(shiftTypeService.update(user, id, shiftType));
     }
 
     @Operation(summary = "근무타입 삭제 (소프트)",
             description = "근무타입을 비활성화합니다. 실제 삭제가 아닌 isActive=false 처리.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal User user,
             @Parameter(description = "근무타입 ID") @PathVariable UUID id) {
-        shiftTypeService.delete(id);
+        shiftTypeService.delete(user, id);
         return ResponseEntity.ok().build();
     }
 

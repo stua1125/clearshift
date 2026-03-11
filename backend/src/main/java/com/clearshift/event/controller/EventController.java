@@ -6,8 +6,10 @@ import com.clearshift.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,7 @@ import java.util.UUID;
 @Tag(name = "이벤트", description = "매니저 캘린더 이벤트 CRUD")
 @RestController
 @RequestMapping("/api/manager/events")
+@PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')")
 @RequiredArgsConstructor
 public class EventController {
 
@@ -38,25 +41,25 @@ public class EventController {
             description = "새 캘린더 이벤트를 생성합니다. title, startDate, endDate, color 필수.")
     @PostMapping
     public ResponseEntity<CalendarEvent> create(@AuthenticationPrincipal User user,
-                                                 @RequestBody CalendarEvent event) {
+                                                 @Valid @RequestBody CalendarEvent event) {
         return ResponseEntity.ok(eventService.create(user, event));
     }
 
     @Operation(summary = "이벤트 수정",
             description = "기존 이벤트의 제목, 날짜, 색상, 메모를 수정합니다.")
     @PutMapping("/{id}")
-    public ResponseEntity<CalendarEvent> update(
+    public ResponseEntity<CalendarEvent> update(@AuthenticationPrincipal User user,
             @Parameter(description = "이벤트 ID") @PathVariable UUID id,
-            @RequestBody CalendarEvent event) {
-        return ResponseEntity.ok(eventService.update(id, event));
+            @Valid @RequestBody CalendarEvent event) {
+        return ResponseEntity.ok(eventService.update(user, id, event));
     }
 
     @Operation(summary = "이벤트 삭제",
             description = "이벤트를 영구 삭제합니다.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal User user,
             @Parameter(description = "이벤트 ID") @PathVariable UUID id) {
-        eventService.delete(id);
+        eventService.delete(user, id);
         return ResponseEntity.ok().build();
     }
 }

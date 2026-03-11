@@ -34,9 +34,11 @@ public class EventService {
     }
 
     @Transactional
-    public CalendarEvent update(UUID id, CalendarEvent updated) {
+    public CalendarEvent update(User user, UUID id, CalendarEvent updated) {
         CalendarEvent existing = eventRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        verifyBranchOwnership(existing, user);
 
         existing.setTitle(updated.getTitle());
         existing.setStartDate(updated.getStartDate());
@@ -47,7 +49,18 @@ public class EventService {
     }
 
     @Transactional
-    public void delete(UUID id) {
+    public void delete(User user, UUID id) {
+        CalendarEvent existing = eventRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        verifyBranchOwnership(existing, user);
+
         eventRepository.deleteById(id);
+    }
+
+    private void verifyBranchOwnership(CalendarEvent event, User user) {
+        if (!event.getBranch().getId().equals(user.getBranch().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied: event belongs to another branch");
+        }
     }
 }

@@ -53,9 +53,14 @@ public class ShiftTypeService {
     }
 
     @Transactional
-    public void delete(UUID id) {
+    public void delete(User user, UUID id) {
         ShiftType shiftType = shiftTypeRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (!shiftType.getBranch().getId().equals(user.getBranch().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied: shift type belongs to another branch");
+        }
+
         shiftType.setActive(false);
         shiftTypeRepository.save(shiftType);
     }

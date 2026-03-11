@@ -3,6 +3,8 @@ package com.clearshift.event.entity;
 import com.clearshift.branch.entity.Branch;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -27,15 +29,19 @@ public class CalendarEvent {
     @JsonIgnore
     private Branch branch;
 
+    @NotBlank
     @Column(nullable = false, length = 200)
     private String title;
 
+    @NotNull
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
+    @NotNull
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+    @NotNull
     @Column(nullable = false, length = 10)
     private String color;
 
