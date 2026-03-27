@@ -23,6 +23,7 @@ services:
       db:
         condition: service_healthy
     environment:
+      SPRING_PROFILES_ACTIVE: dev
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/clearshift
       SPRING_DATASOURCE_USERNAME: clearshift
       SPRING_DATASOURCE_PASSWORD: clearshift
