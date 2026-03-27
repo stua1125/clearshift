@@ -8,6 +8,7 @@ import {
   updateEvent,
   deleteEvent,
 } from "@/lib/api/events";
+import { ManagerGuard } from "@/components/manager-guard";
 import { useCalendar } from "@/hooks/use-calendar";
 import { CalendarHeader } from "@/components/calendar-header";
 import { Button } from "@/components/ui/button";
@@ -66,6 +67,7 @@ export default function EventsPage() {
   });
 
   return (
+    <ManagerGuard>
     <div className="p-4">
       <div className="flex items-center gap-2">
         <Link
@@ -163,6 +165,7 @@ export default function EventsPage() {
         </SheetContent>
       </Sheet>
     </div>
+    </ManagerGuard>
   );
 }
 

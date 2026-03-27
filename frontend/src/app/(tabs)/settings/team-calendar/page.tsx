@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getTeamSchedules } from "@/lib/api/manager";
 import { useCalendar } from "@/hooks/use-calendar";
+import { ManagerGuard } from "@/components/manager-guard";
 import { CalendarHeader } from "@/components/calendar-header";
 import { ViewToggle } from "@/components/view-toggle";
 import { ArrowLeft } from "lucide-react";
@@ -21,6 +22,7 @@ export default function TeamCalendarPage() {
   });
 
   return (
+    <ManagerGuard>
     <div>
       <div className="flex items-center gap-2 px-4 pt-4">
         <Link
@@ -51,5 +53,6 @@ export default function TeamCalendarPage() {
         />
       )}
     </div>
+    </ManagerGuard>
   );
 }

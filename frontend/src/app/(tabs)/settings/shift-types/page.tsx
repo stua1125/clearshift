@@ -8,6 +8,7 @@ import {
   updateShiftType,
   deleteShiftType,
 } from "@/lib/api/shift-types";
+import { ManagerGuard } from "@/components/manager-guard";
 import { ShiftBadge } from "@/components/shift-badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -73,6 +74,7 @@ export default function ShiftTypesPage() {
   };
 
   return (
+    <ManagerGuard>
     <div className="p-4">
       <div className="flex items-center gap-2">
         <Link
@@ -152,6 +154,7 @@ export default function ShiftTypesPage() {
         </SheetContent>
       </Sheet>
     </div>
+    </ManagerGuard>
   );
 }
 
@@ -183,7 +186,7 @@ function ShiftTypeForm({
       bgColor: colors.bgColor,
       category: "WORK",
       sortOrder: initial?.sortOrder ?? 999,
-      isActive: true,
+      active: true,
     });
   };
 

@@ -29,7 +29,7 @@ export function PaintToolbar({
       )}
     >
       {shiftTypes
-        .filter((s) => s.isActive)
+        .filter((s) => s.active)
         .map((shift) => {
           const isSelected = selectedId === shift.id && !eraserActive;
           return (

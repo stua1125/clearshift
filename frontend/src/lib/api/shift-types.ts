@@ -1,8 +1,19 @@
 import type { ShiftType } from "@/types";
 import apiClient from "./client";
 
-export async function getShiftTypes(): Promise<ShiftType[]> {
-  const { data } = await apiClient.get("/manager/shift-types");
+/** Worker/Manager 공용 — 활성 근무타입만 반환 */
+export async function getActiveShiftTypes(): Promise<ShiftType[]> {
+  const { data } = await apiClient.get("/shift-types");
+  return data;
+}
+
+/** Manager 전용 — 전체 근무타입(비활성 포함) */
+export async function getShiftTypes(
+  status: string = "all"
+): Promise<ShiftType[]> {
+  const { data } = await apiClient.get("/manager/shift-types", {
+    params: { status },
+  });
   return data;
 }
 

@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCalendar } from "@/hooks/use-calendar";
 import { usePaintStore } from "@/stores/paint-store";
 import { getSchedule, saveAssignments, submitSchedule } from "@/lib/api/schedule";
-import { getShiftTypes } from "@/lib/api/shift-types";
+import { getActiveShiftTypes } from "@/lib/api/shift-types";
 import { CalendarHeader } from "@/components/calendar-header";
 import { CalendarGrid } from "@/components/calendar-grid";
 import { DayCell } from "@/components/day-cell";
@@ -37,7 +37,7 @@ export default function SchedulePage() {
 
   const { data: shiftTypes = [] } = useQuery({
     queryKey: ["shift-types"],
-    queryFn: getShiftTypes,
+    queryFn: getActiveShiftTypes,
   });
 
   // Sync server assignments to store

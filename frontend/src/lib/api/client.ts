@@ -23,13 +23,20 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Response: 401 → refresh 시도
+// Response: 401 → refresh 시도, 403 → 그대로 reject (권한 부족)
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const status = error.response?.status;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // 403 Forbidden — 권한 부족이므로 리다이렉트하지 않고 에러 전파
+    if (status === 403) {
+      return Promise.reject(error);
+    }
+
+    // 401 Unauthorized — 토큰 만료 시 refresh 시도
+    if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {

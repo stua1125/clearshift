@@ -8,7 +8,7 @@ export interface ShiftType {
   bgColor: string;
   category: ShiftCategory;
   sortOrder: number;
-  isActive: boolean;
+  active: boolean;
   startTime?: string;
   endTime?: string;
 }

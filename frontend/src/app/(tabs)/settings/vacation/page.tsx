@@ -8,6 +8,7 @@ import {
   deleteOverride,
 } from "@/lib/api/vacation";
 import { useCalendar } from "@/hooks/use-calendar";
+import { ManagerGuard } from "@/components/manager-guard";
 import { CalendarHeader } from "@/components/calendar-header";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Minus, Plus, X } from "lucide-react";
@@ -46,6 +47,7 @@ export default function VacationPage() {
   const defaultMax = data?.defaultMax ?? 2;
 
   return (
+    <ManagerGuard>
     <div className="p-4">
       <div className="flex items-center gap-2">
         <Link
@@ -156,5 +158,6 @@ export default function VacationPage() {
         </div>
       </div>
     </div>
+    </ManagerGuard>
   );
 }
