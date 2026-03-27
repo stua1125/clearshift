@@ -1,4 +1,5 @@
 import { BottomNav } from "@/components/bottom-nav";
+import { AuthGuard } from "@/components/auth-guard";
 
 export default function TabsLayout({
   children,
@@ -6,9 +7,11 @@ export default function TabsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto min-h-dvh max-w-lg pb-20">
-      {children}
-      <BottomNav />
-    </div>
+    <AuthGuard>
+      <div className="mx-auto min-h-dvh max-w-lg pb-20">
+        {children}
+        <BottomNav />
+      </div>
+    </AuthGuard>
   );
 }
