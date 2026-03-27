@@ -1,24 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/auth-store";
 import { googleLogin } from "@/lib/api/auth";
+import { getDevToken } from "@/lib/api/dev";
 import { Button } from "@/components/ui/button";
 
 export default function AuthPage() {
   const router = useRouter();
   const login = useAuthStore((s) => s.login);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGoogleLogin = async () => {
-    // In production, this would use Google OAuth SDK to get idToken
-    // For now, simulate with a placeholder flow
     const idToken = "google-id-token-placeholder";
-
+    setIsLoading(true);
     try {
       const res = await googleLogin({ idToken });
 
       if ("needsRegistration" in res && res.needsRegistration) {
-        // Store idToken for registration flow
         sessionStorage.setItem("pendingIdToken", idToken);
         router.push("/auth/register");
         return;
@@ -30,6 +30,22 @@ export default function AuthPage() {
       }
     } catch {
       alert("로그인에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleDevLogin = async (role: "WORKER" | "MANAGER") => {
+    setIsLoading(true);
+    try {
+      const name = role === "MANAGER" ? "매니저" : "근무자";
+      const res = await getDevToken(role, name);
+      login(res.user, res.accessToken, res.refreshToken);
+      router.replace("/home");
+    } catch {
+      alert("Dev 서버에 연결할 수 없습니다. 백엔드가 실행 중인지 확인하세요.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -43,10 +59,44 @@ export default function AuthPage() {
           </p>
         </div>
 
-        <Button onClick={handleGoogleLogin} className="w-full gap-2" size="lg">
-          <GoogleIcon />
-          Google로 시작하기
-        </Button>
+        <div className="space-y-sm">
+          <Button
+            onClick={handleGoogleLogin}
+            disabled={isLoading}
+            className="w-full gap-2"
+            size="lg"
+          >
+            <GoogleIcon />
+            Google로 시작하기
+          </Button>
+
+          {/* Dev login buttons — only visible in development */}
+          {process.env.NODE_ENV === "development" && (
+            <div className="space-y-sm pt-lg">
+              <p className="text-xs text-text-tertiary">
+                — 개발용 빠른 로그인 —
+              </p>
+              <div className="flex gap-sm">
+                <Button
+                  onClick={() => handleDevLogin("WORKER")}
+                  disabled={isLoading}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  근무자 로그인
+                </Button>
+                <Button
+                  onClick={() => handleDevLogin("MANAGER")}
+                  disabled={isLoading}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  매니저 로그인
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ export async function getVacationLimits(
   year: number,
   month: number
 ): Promise<VacationLimit> {
-  const { data } = await apiClient.get("/vacation/limits", {
+  const { data } = await apiClient.get("/manager/vacation-limits", {
     params: { year, month },
   });
   return data;
@@ -14,7 +14,7 @@ export async function getVacationLimits(
 export async function updateDefaultMax(
   defaultMax: number
 ): Promise<VacationLimit> {
-  const { data } = await apiClient.put("/vacation/limits/default", {
+  const { data } = await apiClient.put("/manager/vacation-limits", {
     defaultMax,
   });
   return data;
@@ -23,13 +23,13 @@ export async function updateDefaultMax(
 export async function setOverride(
   req: VacationOverrideRequest
 ): Promise<VacationLimit> {
-  const { data } = await apiClient.post("/vacation/limits/overrides", req);
+  const { data } = await apiClient.post("/manager/vacation-limits/overrides", req);
   return data;
 }
 
 export async function deleteOverride(id: string): Promise<VacationLimit> {
   const { data } = await apiClient.delete(
-    `/vacation/limits/overrides/${id}`
+    `/manager/vacation-limits/overrides/${id}`
   );
   return data;
 }

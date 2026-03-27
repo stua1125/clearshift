@@ -5,7 +5,7 @@ export async function getTeamSchedules(
   year: number,
   month: number
 ): Promise<TeamScheduleResponse[]> {
-  const { data } = await apiClient.get("/manager/schedules", {
+  const { data } = await apiClient.get("/manager/team/schedules", {
     params: { year, month },
   });
   return data;
