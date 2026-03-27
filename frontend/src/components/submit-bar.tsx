@@ -22,7 +22,7 @@ export function SubmitBar({
   const isComplete = percent >= 100;
 
   return (
-    <div className={cn("space-y-sm px-lg py-md", className)}>
+    <div className={cn("space-y-2 px-4 py-3", className)}>
       <div className="flex items-center justify-between text-sm">
         <span className="text-text-primary">
           작성 현황: {assigned}/{total}일

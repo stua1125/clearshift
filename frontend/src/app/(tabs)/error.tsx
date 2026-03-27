@@ -10,7 +10,7 @@ export default function TabsError({
   reset: () => void;
 }) {
   return (
-    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-lg px-lg text-center">
+    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 px-4 text-center">
       <p className="text-lg font-semibold text-error">문제가 발생했습니다</p>
       <p className="text-sm text-text-secondary">{error.message}</p>
       <Button onClick={reset} variant="outline">

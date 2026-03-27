@@ -22,7 +22,7 @@ export default function TeamCalendarPage() {
 
   return (
     <div>
-      <div className="flex items-center gap-sm px-lg pt-lg">
+      <div className="flex items-center gap-2 px-4 pt-4">
         <Link
           href="/settings"
           className="flex size-10 items-center justify-center rounded-md text-text-secondary hover:bg-surface-variant"

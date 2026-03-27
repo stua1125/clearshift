@@ -50,16 +50,16 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center px-lg">
-      <div className="w-full max-w-sm space-y-3xl text-center">
+    <div className="flex min-h-dvh flex-col items-center justify-center px-4">
+      <div className="w-full max-w-sm space-y-8 text-center">
         <div>
           <h1 className="text-3xl font-bold text-primary">ClearShift</h1>
-          <p className="mt-sm text-sm text-text-secondary">
+          <p className="mt-2 text-sm text-text-secondary">
             교대 근무자용 공유 캘린더
           </p>
         </div>
 
-        <div className="space-y-sm">
+        <div className="space-y-2">
           <Button
             onClick={handleGoogleLogin}
             disabled={isLoading}
@@ -72,11 +72,11 @@ export default function AuthPage() {
 
           {/* Dev login buttons — only visible in development */}
           {process.env.NODE_ENV === "development" && (
-            <div className="space-y-sm pt-lg">
+            <div className="space-y-2 pt-4">
               <p className="text-xs text-text-tertiary">
                 — 개발용 빠른 로그인 —
               </p>
-              <div className="flex gap-sm">
+              <div className="flex gap-2">
                 <Button
                   onClick={() => handleDevLogin("WORKER")}
                   disabled={isLoading}

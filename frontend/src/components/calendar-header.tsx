@@ -28,11 +28,11 @@ export function CalendarHeader({
   return (
     <div
       className={cn(
-        "flex items-center justify-between px-lg py-md",
+        "flex items-center justify-between px-4 py-3",
         className
       )}
     >
-      <div className="flex items-center gap-sm">
+      <div className="flex items-center gap-2">
         <button
           type="button"
           data-testid={prevLabel}

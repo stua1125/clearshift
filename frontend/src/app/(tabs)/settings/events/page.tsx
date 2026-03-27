@@ -66,8 +66,8 @@ export default function EventsPage() {
   });
 
   return (
-    <div className="p-lg">
-      <div className="flex items-center gap-sm">
+    <div className="p-4">
+      <div className="flex items-center gap-2">
         <Link
           href="/settings"
           className="flex size-10 items-center justify-center rounded-md text-text-secondary hover:bg-surface-variant"
@@ -82,14 +82,14 @@ export default function EventsPage() {
         month={calendar.month}
         onPrev={calendar.goToPrevMonth}
         onNext={calendar.goToNextMonth}
-        className="mt-lg px-0"
+        className="mt-4 px-0"
       />
 
-      <div className="mt-lg space-y-sm">
+      <div className="mt-4 space-y-2">
         {events.map((ev) => (
           <div
             key={ev.id}
-            className="flex items-center gap-md rounded-lg border border-border-light p-md"
+            className="flex items-center gap-3 rounded-lg border border-border-light p-3"
           >
             <div
               className="size-3 shrink-0 rounded-full"
@@ -136,7 +136,7 @@ export default function EventsPage() {
           setEditingEvent(null);
           setSheetOpen(true);
         }}
-        className="mt-lg w-full gap-1"
+        className="mt-4 w-full gap-1"
       >
         <Plus className="size-4" />
         이벤트 추가
@@ -187,17 +187,17 @@ function EventForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-lg space-y-lg">
+    <form onSubmit={handleSubmit} className="mt-4 space-y-4">
       <div>
         <label className="mb-1 block text-sm font-medium">제목</label>
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
-          className="w-full rounded-md border border-border bg-surface-variant px-md py-sm text-sm outline-none focus:border-primary"
+          className="w-full rounded-md border border-border bg-surface-variant px-3 py-2 text-sm outline-none focus:border-primary"
         />
       </div>
-      <div className="flex gap-sm">
+      <div className="flex gap-2">
         <div className="flex-1">
           <label className="mb-1 block text-sm font-medium">시작일</label>
           <input
@@ -205,7 +205,7 @@ function EventForm({
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             required
-            className="w-full rounded-md border border-border bg-surface-variant px-md py-sm text-sm outline-none"
+            className="w-full rounded-md border border-border bg-surface-variant px-3 py-2 text-sm outline-none"
           />
         </div>
         <div className="flex-1">
@@ -215,13 +215,13 @@ function EventForm({
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             required
-            className="w-full rounded-md border border-border bg-surface-variant px-md py-sm text-sm outline-none"
+            className="w-full rounded-md border border-border bg-surface-variant px-3 py-2 text-sm outline-none"
           />
         </div>
       </div>
       <div>
         <label className="mb-1 block text-sm font-medium">색상</label>
-        <div className="flex gap-sm">
+        <div className="flex gap-2">
           {EVENT_COLORS.map((c) => (
             <button
               key={c}
@@ -242,7 +242,7 @@ function EventForm({
           value={memo}
           onChange={(e) => setMemo(e.target.value)}
           rows={2}
-          className="w-full rounded-md border border-border bg-surface-variant px-md py-sm text-sm outline-none focus:border-primary"
+          className="w-full rounded-md border border-border bg-surface-variant px-3 py-2 text-sm outline-none focus:border-primary"
         />
       </div>
       <Button type="submit" disabled={isPending} className="w-full">

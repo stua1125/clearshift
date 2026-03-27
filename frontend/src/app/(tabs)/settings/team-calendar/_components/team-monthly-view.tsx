@@ -10,14 +10,14 @@ interface TeamMonthlyViewProps {
 
 export function TeamMonthlyView({ schedules }: TeamMonthlyViewProps) {
   return (
-    <div className="space-y-sm px-lg">
+    <div className="space-y-2 px-4">
       {schedules.map((member) => (
         <div
           key={member.scheduleId}
-          className="rounded-lg border border-border-light p-md"
+          className="rounded-lg border border-border-light p-3"
         >
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-sm">
+            <div className="flex items-center gap-2">
               <div className="flex size-8 items-center justify-center rounded-full bg-primary-container text-xs font-bold text-primary">
                 {member.userName[0]}
               </div>
@@ -34,7 +34,7 @@ export function TeamMonthlyView({ schedules }: TeamMonthlyViewProps) {
               {member.status === "SUBMITTED" ? "제출" : "미제출"}
             </span>
           </div>
-          <div className="mt-sm flex flex-wrap gap-1">
+          <div className="mt-2 flex flex-wrap gap-1">
             {Object.entries(member.assignments)
               .sort(([a], [b]) => Number(a) - Number(b))
               .slice(0, 10)

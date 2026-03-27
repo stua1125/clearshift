@@ -73,8 +73,8 @@ export default function ShiftTypesPage() {
   };
 
   return (
-    <div className="p-lg">
-      <div className="flex items-center gap-sm">
+    <div className="p-4">
+      <div className="flex items-center gap-2">
         <Link
           href="/settings"
           className="flex size-10 items-center justify-center rounded-md text-text-secondary hover:bg-surface-variant"
@@ -84,11 +84,11 @@ export default function ShiftTypesPage() {
         <h1 className="text-xl font-bold">근무 타입 관리</h1>
       </div>
 
-      <div className="mt-lg space-y-sm">
+      <div className="mt-4 space-y-2">
         {shiftTypes.map((shift) => (
           <div
             key={shift.id}
-            className="flex items-center gap-md rounded-lg border border-border-light p-md"
+            className="flex items-center gap-3 rounded-lg border border-border-light p-3"
           >
             <GripVertical className="size-4 text-text-tertiary" />
             <ShiftBadge
@@ -126,7 +126,7 @@ export default function ShiftTypesPage() {
         ))}
       </div>
 
-      <Button onClick={openCreate} className="mt-lg w-full gap-1">
+      <Button onClick={openCreate} className="mt-4 w-full gap-1">
         <Plus className="size-4" />
         근무 타입 추가
       </Button>
@@ -188,7 +188,7 @@ function ShiftTypeForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-lg space-y-lg">
+    <form onSubmit={handleSubmit} className="mt-4 space-y-4">
       <div>
         <label className="mb-1 block text-sm font-medium">이름</label>
         <input
@@ -196,7 +196,7 @@ function ShiftTypeForm({
           onChange={(e) => setName(e.target.value)}
           placeholder="예: 오전 근무"
           required
-          className="w-full rounded-md border border-border bg-surface-variant px-md py-sm text-sm outline-none focus:border-primary"
+          className="w-full rounded-md border border-border bg-surface-variant px-3 py-2 text-sm outline-none focus:border-primary"
         />
       </div>
       <div>
@@ -206,12 +206,12 @@ function ShiftTypeForm({
           onChange={(e) => setAbbreviation(e.target.value)}
           placeholder="예: 오전"
           required
-          className="w-full rounded-md border border-border bg-surface-variant px-md py-sm text-sm outline-none focus:border-primary"
+          className="w-full rounded-md border border-border bg-surface-variant px-3 py-2 text-sm outline-none focus:border-primary"
         />
       </div>
       <div>
         <label className="mb-1 block text-sm font-medium">색상</label>
-        <div className="flex gap-sm">
+        <div className="flex gap-2">
           {DEFAULT_COLORS.map((c, i) => (
             <button
               key={i}

@@ -4,7 +4,7 @@ export function CalendarSkeleton() {
   return (
     <div className="animate-pulse">
       {/* Header */}
-      <div className="flex items-center justify-between px-lg py-md">
+      <div className="flex items-center justify-between px-4 py-3">
         <div className="h-6 w-32 rounded-md bg-surface-variant" />
         <div className="h-8 w-20 rounded-lg bg-surface-variant" />
       </div>

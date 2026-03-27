@@ -44,14 +44,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center px-lg">
+    <div className="flex min-h-dvh flex-col items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-bold">회원가입</h1>
-        <p className="mt-xs text-sm text-text-secondary">
+        <p className="mt-1 text-sm text-text-secondary">
           정보를 입력해주세요
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-xl space-y-lg">
+        <form onSubmit={handleSubmit} className="mt-5 space-y-4">
           <div>
             <label className="mb-1 block text-sm font-medium">이름</label>
             <input
@@ -59,7 +59,7 @@ export default function RegisterPage() {
               onChange={(e) => setName(e.target.value)}
               placeholder="홍길동"
               required
-              className="w-full rounded-md border border-border bg-surface-variant px-md py-sm text-sm outline-none focus:border-primary"
+              className="w-full rounded-md border border-border bg-surface-variant px-3 py-2 text-sm outline-none focus:border-primary"
             />
           </div>
 
@@ -69,7 +69,7 @@ export default function RegisterPage() {
               value={branchId}
               onChange={(e) => setBranchId(e.target.value)}
               required
-              className="w-full rounded-md border border-border bg-surface-variant px-md py-sm text-sm outline-none focus:border-primary"
+              className="w-full rounded-md border border-border bg-surface-variant px-3 py-2 text-sm outline-none focus:border-primary"
             >
               <option value="">지점을 선택하세요</option>
               {branches.map((b) => (

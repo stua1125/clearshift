@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@source "../../components";
+@source "../../hooks";
+@source "../../lib";
+@source "../../stores";
+@source "..";
+
 /* ── Design Tokens (SPEC.md §2.3) ── */
 @theme {
   /* Primary */
@@ -45,15 +51,6 @@
   --color-saturday: #0064FF;
   --color-cell-hover: #F9FAFB;
 
-  /* Spacing (4px grid) */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 12px;
-  --spacing-lg: 16px;
-  --spacing-xl: 20px;
-  --spacing-2xl: 24px;
-  --spacing-3xl: 32px;
-
   /* Radius */
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -65,9 +62,9 @@
     BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* ── Dark Mode Tokens ── */
+/* ── Dark Mode Overrides ── */
 @media (prefers-color-scheme: dark) {
-  @theme {
+  :root {
     --color-background: #111113;
     --color-surface: #17171C;
     --color-surface-variant: #1F2028;

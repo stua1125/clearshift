@@ -26,7 +26,7 @@ export function TeamWeeklyView({
 
   return (
     <div>
-      <div className="flex items-center justify-between px-lg py-sm">
+      <div className="flex items-center justify-between px-4 py-2">
         <button
           type="button"
           onClick={() => setWeekIdx((i) => Math.max(0, i - 1))}

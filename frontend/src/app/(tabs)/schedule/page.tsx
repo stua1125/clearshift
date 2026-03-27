@@ -182,7 +182,7 @@ export default function SchedulePage() {
       )}
 
       {schedule?.status === "SUBMITTED" && (
-        <div className="px-lg py-md text-center text-sm font-medium text-success">
+        <div className="px-4 py-3 text-center text-sm font-medium text-success">
           제출 완료 ({schedule.submittedAt?.slice(0, 10)})
         </div>
       )}

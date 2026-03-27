@@ -46,8 +46,8 @@ export default function VacationPage() {
   const defaultMax = data?.defaultMax ?? 2;
 
   return (
-    <div className="p-lg">
-      <div className="flex items-center gap-sm">
+    <div className="p-4">
+      <div className="flex items-center gap-2">
         <Link
           href="/settings"
           className="flex size-10 items-center justify-center rounded-md text-text-secondary hover:bg-surface-variant"
@@ -62,13 +62,13 @@ export default function VacationPage() {
         month={calendar.month}
         onPrev={calendar.goToPrevMonth}
         onNext={calendar.goToNextMonth}
-        className="mt-lg px-0"
+        className="mt-4 px-0"
       />
 
       {/* Default Max */}
-      <div className="mt-lg rounded-lg border border-border-light p-lg">
+      <div className="mt-4 rounded-lg border border-border-light p-4">
         <p className="text-sm font-medium">일별 기본 휴가 인원</p>
-        <div className="mt-sm flex items-center gap-lg">
+        <div className="mt-2 flex items-center gap-4">
           <button
             type="button"
             onClick={() =>
@@ -91,15 +91,15 @@ export default function VacationPage() {
       </div>
 
       {/* Overrides */}
-      <div className="mt-lg">
+      <div className="mt-4">
         <h2 className="text-sm font-semibold text-text-secondary">
           날짜별 예외 설정
         </h2>
-        <div className="mt-sm space-y-sm">
+        <div className="mt-2 space-y-2">
           {data?.overrides.map((ov) => (
             <div
               key={ov.id}
-              className="flex items-center justify-between rounded-lg border border-border-light px-md py-sm"
+              className="flex items-center justify-between rounded-lg border border-border-light px-3 py-2"
             >
               <span className="text-sm">
                 {formatShortDate(ov.targetDate)} — 최대{" "}
@@ -117,7 +117,7 @@ export default function VacationPage() {
         </div>
 
         {/* Add Override */}
-        <div className="mt-md flex items-end gap-sm">
+        <div className="mt-3 flex items-end gap-2">
           <div className="flex-1">
             <label className="mb-1 block text-xs text-text-secondary">
               날짜
@@ -126,7 +126,7 @@ export default function VacationPage() {
               type="date"
               value={overrideDate}
               onChange={(e) => setOverrideDate(e.target.value)}
-              className="w-full rounded-md border border-border bg-surface-variant px-md py-sm text-sm outline-none"
+              className="w-full rounded-md border border-border bg-surface-variant px-3 py-2 text-sm outline-none"
             />
           </div>
           <div className="w-20">
@@ -138,7 +138,7 @@ export default function VacationPage() {
               min={0}
               value={overrideCount}
               onChange={(e) => setOverrideCount(Number(e.target.value))}
-              className="w-full rounded-md border border-border bg-surface-variant px-md py-sm text-sm outline-none"
+              className="w-full rounded-md border border-border bg-surface-variant px-3 py-2 text-sm outline-none"
             />
           </div>
           <Button

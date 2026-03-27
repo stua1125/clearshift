@@ -42,12 +42,12 @@ export default function SettingsPage() {
   const { user, isManager, logout } = useAuth();
 
   return (
-    <div className="p-lg">
+    <div className="p-4">
       <h1 className="text-2xl font-bold">설정</h1>
 
       {/* Profile Card */}
-      <div className="mt-xl rounded-lg border border-border-light p-lg">
-        <div className="flex items-center gap-md">
+      <div className="mt-5 rounded-lg border border-border-light p-4">
+        <div className="flex items-center gap-3">
           <div className="flex size-12 items-center justify-center rounded-full bg-primary-container text-lg font-bold text-primary">
             {user?.name?.[0] ?? "?"}
           </div>
@@ -67,8 +67,8 @@ export default function SettingsPage() {
 
       {/* Manager Section */}
       {isManager && (
-        <div className="mt-xl">
-          <h2 className="mb-sm text-sm font-semibold text-text-secondary">
+        <div className="mt-5">
+          <h2 className="mb-2 text-sm font-semibold text-text-secondary">
             관리자 메뉴
           </h2>
           <div className="divide-y divide-border-light rounded-lg border border-border-light">
@@ -77,9 +77,9 @@ export default function SettingsPage() {
                 key={href}
                 href={href}
                 data-testid={testId}
-                className="flex items-center justify-between px-lg py-md transition-colors hover:bg-surface-variant"
+                className="flex items-center justify-between px-4 py-3 transition-colors hover:bg-surface-variant"
               >
-                <div className="flex items-center gap-md">
+                <div className="flex items-center gap-3">
                   <Icon className="size-5 text-text-secondary" />
                   <span className="text-sm font-medium text-text-primary">
                     {label}
@@ -98,7 +98,7 @@ export default function SettingsPage() {
           type="button"
           onClick={logout}
           className={cn(
-            "mt-xl w-full rounded-lg border border-border-light px-lg py-md text-sm font-medium text-error transition-colors hover:bg-surface-variant"
+            "mt-5 w-full rounded-lg border border-border-light px-4 py-3 text-sm font-medium text-error transition-colors hover:bg-surface-variant"
           )}
         >
           로그아웃

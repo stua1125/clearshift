@@ -24,7 +24,7 @@ export function PaintToolbar({
   return (
     <div
       className={cn(
-        "flex items-center gap-sm overflow-x-auto px-lg py-sm",
+        "flex items-center gap-2 overflow-x-auto px-4 py-2",
         className
       )}
     >
