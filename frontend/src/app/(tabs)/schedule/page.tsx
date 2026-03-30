@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCalendar } from "@/hooks/use-calendar";
 import { usePaintStore } from "@/stores/paint-store";
@@ -11,24 +11,21 @@ import { CalendarGrid } from "@/components/calendar-grid";
 import { DayCell } from "@/components/day-cell";
 import { PaintToolbar } from "@/components/paint-toolbar";
 import { SubmitBar } from "@/components/submit-bar";
-import { PaintModeToggle } from "./_components/paint-mode-toggle";
 import type { AssignmentInfo } from "@/types";
 
 export default function SchedulePage() {
   const calendar = useCalendar();
   const queryClient = useQueryClient();
   const {
-    paintMode,
     selectedShiftTypeId,
+    eraserActive,
     assignments,
-    togglePaintMode,
     selectShiftType,
+    toggleEraser,
     assignDay,
     clearDay,
     setAssignments,
   } = usePaintStore();
-
-  const [eraserActive, setEraserActive] = useState(false);
 
   const { data: schedule } = useQuery({
     queryKey: ["schedule", calendar.year, calendar.month],
@@ -39,6 +36,13 @@ export default function SchedulePage() {
     queryKey: ["shift-types"],
     queryFn: getActiveShiftTypes,
   });
+
+  // Auto-select first shift type
+  useEffect(() => {
+    if (shiftTypes.length > 0 && !selectedShiftTypeId && !eraserActive) {
+      selectShiftType(shiftTypes[0].id);
+    }
+  }, [shiftTypes, selectedShiftTypeId, eraserActive, selectShiftType]);
 
   // Sync server assignments to store
   useEffect(() => {
@@ -75,8 +79,6 @@ export default function SchedulePage() {
 
   const handleCellClick = useCallback(
     (day: number) => {
-      if (!paintMode) return;
-
       if (eraserActive) {
         clearDay(day);
         saveMutation.mutate();
@@ -105,7 +107,6 @@ export default function SchedulePage() {
       saveMutation.mutate();
     },
     [
-      paintMode,
       eraserActive,
       selectedShiftTypeId,
       shiftTypes,
@@ -116,20 +117,19 @@ export default function SchedulePage() {
     ]
   );
 
-  const handleSelectShift = (id: string) => {
-    setEraserActive(false);
-    selectShiftType(id);
-  };
-
-  const handleToggleEraser = () => {
-    setEraserActive(!eraserActive);
-    selectShiftType(null);
-  };
-
+  const selectedShift = shiftTypes.find((s) => s.id === selectedShiftTypeId);
   const assignedCount = Object.keys(assignments).length;
 
   return (
-    <div>
+    <div className="flex flex-col">
+      {/* Page Title */}
+      <div className="px-4 pt-4 pb-1">
+        <h1 className="text-lg font-bold text-text-primary">
+          ✏️ 근무신청
+        </h1>
+      </div>
+
+      {/* Month Navigation */}
       <CalendarHeader
         year={calendar.year}
         month={calendar.month}
@@ -137,20 +137,30 @@ export default function SchedulePage() {
         onNext={calendar.goToNextMonth}
         prevLabel="prev-month-worker"
         nextLabel="next-month-worker"
-      >
-        <PaintModeToggle active={paintMode} onToggle={togglePaintMode} />
-      </CalendarHeader>
+      />
 
-      {paintMode && (
-        <PaintToolbar
-          shiftTypes={shiftTypes}
-          selectedId={selectedShiftTypeId}
-          eraserActive={eraserActive}
-          onSelectShift={handleSelectShift}
-          onToggleEraser={handleToggleEraser}
-        />
-      )}
+      {/* Selection Status */}
+      <div className="mx-4 rounded-lg bg-primary-container px-3 py-2 text-sm">
+        {eraserActive ? (
+          <span className="text-text-primary">
+            🧹 지우개 모드 — 탭해서 삭제
+          </span>
+        ) : selectedShift ? (
+          <span className="text-text-primary">
+            <span
+              className="mr-1 inline-block size-2 rounded-full"
+              style={{ backgroundColor: selectedShift.color }}
+            />
+            {selectedShift.name} 선택됨 — 탭하거나 드래그해서 등록
+          </span>
+        ) : (
+          <span className="text-text-secondary">
+            아래에서 근무 타입을 선택하세요
+          </span>
+        )}
+      </div>
 
+      {/* Calendar */}
       <CalendarGrid>
         {calendar.weekRows.flatMap((row, rowIdx) =>
           row.map((day, colIdx) => (
@@ -165,23 +175,33 @@ export default function SchedulePage() {
                 new Date().getFullYear() === calendar.year
               }
               assignment={day > 0 ? assignments[day] : undefined}
-              paintMode={paintMode}
               onClick={() => day > 0 && handleCellClick(day)}
             />
           ))
         )}
       </CalendarGrid>
 
-      {schedule?.status !== "SUBMITTED" && (
+      {/* Spacer to push toolbar + submit to bottom */}
+      <div className="flex-1" />
+
+      {/* Paint Toolbar (bottom) */}
+      <PaintToolbar
+        shiftTypes={shiftTypes}
+        selectedId={selectedShiftTypeId}
+        eraserActive={eraserActive}
+        onSelectShift={selectShiftType}
+        onToggleEraser={toggleEraser}
+      />
+
+      {/* Submit Bar */}
+      {schedule?.status !== "SUBMITTED" ? (
         <SubmitBar
           assigned={assignedCount}
           total={calendar.daysInMonth}
           onSubmit={() => submitMutation.mutate()}
           isSubmitting={submitMutation.isPending}
         />
-      )}
-
-      {schedule?.status === "SUBMITTED" && (
+      ) : (
         <div className="px-4 py-3 text-center text-sm font-medium text-success">
           제출 완료 ({schedule.submittedAt?.slice(0, 10)})
         </div>

@@ -59,7 +59,9 @@ export function SubmitBar({
         disabled={!isComplete || isSubmitting}
         className="w-full"
       >
-        {isSubmitting ? "제출 중..." : "제출하기"}
+        {isSubmitting
+          ? "제출 중..."
+          : `제출하기 (${percent}%)`}
       </Button>
     </div>
   );

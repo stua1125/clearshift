@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ShiftBadge } from "./shift-badge";
 import type { AssignmentInfo } from "@/types";
 
 interface DayCellProps {
@@ -9,7 +8,6 @@ interface DayCellProps {
   dayOfWeek: number;
   isToday?: boolean;
   assignment?: AssignmentInfo;
-  paintMode?: boolean;
   onClick?: () => void;
   className?: string;
 }
@@ -19,7 +17,6 @@ export function DayCell({
   dayOfWeek,
   isToday = false,
   assignment,
-  paintMode = false,
   onClick,
   className,
 }: DayCellProps) {
@@ -36,36 +33,40 @@ export function DayCell({
       data-testid={`day-cell-${day}`}
       onClick={onClick}
       className={cn(
-        "day-cell relative flex flex-col items-start text-left transition-colors",
+        "day-cell relative flex flex-col items-start gap-0.5 text-left transition-colors",
+        "cursor-pointer active:scale-95",
         "hover:bg-cell-hover",
-        paintMode && "cursor-pointer active:scale-95",
-        !paintMode && "cursor-default",
-        isToday && "ring-2 ring-primary ring-inset",
-        assignment && "bg-opacity-40",
         className
       )}
       style={
         assignment
-          ? { backgroundColor: `${assignment.bgColor}66` }
+          ? { backgroundColor: `${assignment.bgColor}40` }
           : undefined
       }
     >
-      <span
-        className={cn(
-          "text-xs font-medium",
-          isSunday && "text-sunday",
-          isSaturday && "text-saturday",
-          !isSunday && !isSaturday && "text-text-primary"
-        )}
-      >
-        {day}
-      </span>
+      {isToday ? (
+        <span className="flex size-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
+          {day}
+        </span>
+      ) : (
+        <span
+          className={cn(
+            "text-xs font-medium",
+            isSunday && "text-sunday",
+            isSaturday && "text-saturday",
+            !isSunday && !isSaturday && "text-text-primary"
+          )}
+        >
+          {day}
+        </span>
+      )}
       {assignment && (
-        <ShiftBadge
-          abbreviation={assignment.abbreviation}
-          color={assignment.color}
-          bgColor={assignment.bgColor}
-        />
+        <span
+          className="text-[10px] font-semibold leading-tight"
+          style={{ color: assignment.color }}
+        >
+          {assignment.shiftTypeName}
+        </span>
       )}
     </button>
   );

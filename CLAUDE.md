@@ -1,7 +1,7 @@
 # ClearShift — 교대 근무자용 공유 캘린더 웹앱
 
 ## 프로젝트 개요
-교대 근무자가 월별 스케줄을 Paint Mode로 입력하고, 매니저가 팀 스케줄을 관리하는 웹 애플리케이션.
+교대 근무자가 월별 스케줄을 항상 활성화된 Paint Mode로 입력하고, 매니저가 팀 스케줄을 관리하는 웹 애플리케이션.
 
 ## 기술 스택
 
@@ -37,28 +37,42 @@
 
 ## 네비게이션 (하단 3탭)
 - 홈 (`/home`): 공유 캘린더 (월간/주간)
-- 근무신청 (`/schedule`): Paint Mode 스케줄 입력
-- 설정 (`/settings`): 허브 → 근무타입/휴가/이벤트 관리
+- 근무신청 (`/schedule`): 항상 Paint Mode 활성 — 근무타입 선택 후 날짜 탭하여 입력
+- 설정 (`/settings`): 허브 → 근무타입/휴가/이벤트 관리 (매니저 전용: ManagerGuard)
+
+## 근무신청 화면 (Paint Mode)
+- **항상 Paint Mode**: ON/OFF 토글 없음. 화면 진입 시 첫 번째 근무타입 자동 선택
+- **상단**: "✏️ 근무신청" 타이틀 + 월 네비게이션
+- **선택 상태 안내 바**: "● {근무타입명} 선택됨 — 탭하거나 드래그해서 등록"
+- **캘린더 셀**: 날짜 + shift type 이름(오전/오후 등) 컬러 텍스트 + 배경 틴트
+- **오늘 마커**: filled 파란 원
+- **하단 Paint Toolbar**: 사각형 버튼(bgColor 배경 + 이름) + 라벨 + 지우개
+- **제출 바**: 작성 현황 + 프로그레스 바 + "제출하기 (N%)" 버튼
 
 ## 근무타입 기본값
 오전, 오후, 야간, 휴무
+
+## API 엔드포인트 요약
+- `GET /api/shift-types` — 활성 근무타입 조회 (인증된 사용자 누구나)
+- `GET /api/manager/shift-types` — 전체 근무타입 관리 (매니저 전용)
+- `GET /api/schedules/{year}/{month}` — 내 스케줄 조회
+- `PUT /api/schedules/{year}/{month}/assignments` — 배정 저장
+- `POST /api/schedules/{year}/{month}/submit` — 스케줄 제출
+- `POST /api/dev/token?role={WORKER|MANAGER}&name={name}` — 개발용 토큰
 
 ## 프로젝트 구조
 ```
 frontend/
 ├── src/
 │   ├── app/                 # App Router (라우팅)
-│   │   ├── (main)/          # 하단 탭 레이아웃 그룹
+│   │   ├── (tabs)/          # 하단 탭 레이아웃 그룹
 │   │   │   ├── home/
 │   │   │   ├── schedule/
 │   │   │   └── settings/
-│   │   ├── settings/        # 설정 하위 (탭 없음)
 │   │   └── auth/
-│   ├── components/
+│   ├── components/          # 공용 컴포넌트
 │   │   ├── ui/              # shadcn/ui
-│   │   ├── calendar/        # 캘린더 그리드
-│   │   ├── paint/           # PaintToolbar, SubmitBar
-│   │   └── common/          # ShiftBadge, BottomNav
+│   │   └── *.tsx            # calendar-grid, day-cell, paint-toolbar, submit-bar 등
 │   ├── hooks/               # 커스텀 훅
 │   ├── lib/api/             # Axios, API 함수
 │   ├── stores/              # Zustand 스토어
@@ -76,14 +90,13 @@ npm run dev                    # http://localhost:3000
 
 # Backend (Docker)
 cd backend && docker-compose up -d   # PostgreSQL + API
-./gradlew bootRun                     # http://localhost:8080
 
 # Swagger UI
 open http://localhost:8080/swagger-ui.html
 ```
 
 ## data-testid (E2E 테스트 타겟팅)
-- PaintToolbar: `paint-mode-toggle`, `shift-btn-{오전|오후|야간|휴무}`, `eraser-btn`
+- PaintToolbar: `shift-btn-{abbreviation}`, `eraser-btn`
 - DayCell: `day-cell-{day}`
 - SubmitBar: `submit-button`
 - SharedCalendar: `prev-month`, `next-month`, `view-monthly`, `view-weekly`

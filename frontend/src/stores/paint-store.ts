@@ -2,12 +2,11 @@ import { create } from "zustand";
 import type { AssignmentInfo } from "@/types";
 
 interface PaintState {
-  paintMode: boolean;
   selectedShiftTypeId: string | null;
+  eraserActive: boolean;
   assignments: Record<number, AssignmentInfo>;
-  togglePaintMode: () => void;
-  setPaintMode: (on: boolean) => void;
   selectShiftType: (id: string | null) => void;
+  toggleEraser: () => void;
   assignDay: (day: number, info: AssignmentInfo) => void;
   clearDay: (day: number) => void;
   setAssignments: (assignments: Record<number, AssignmentInfo>) => void;
@@ -15,13 +14,15 @@ interface PaintState {
 }
 
 export const usePaintStore = create<PaintState>()((set) => ({
-  paintMode: false,
   selectedShiftTypeId: null,
+  eraserActive: false,
   assignments: {},
-  togglePaintMode: () =>
-    set((s) => ({ paintMode: !s.paintMode })),
-  setPaintMode: (on) => set({ paintMode: on }),
-  selectShiftType: (id) => set({ selectedShiftTypeId: id }),
+  selectShiftType: (id) => set({ selectedShiftTypeId: id, eraserActive: false }),
+  toggleEraser: () =>
+    set((s) => ({
+      eraserActive: !s.eraserActive,
+      selectedShiftTypeId: null,
+    })),
   assignDay: (day, info) =>
     set((s) => ({
       assignments: { ...s.assignments, [day]: info },
@@ -34,5 +35,5 @@ export const usePaintStore = create<PaintState>()((set) => ({
     }),
   setAssignments: (assignments) => set({ assignments }),
   resetPaint: () =>
-    set({ paintMode: false, selectedShiftTypeId: null, assignments: {} }),
+    set({ selectedShiftTypeId: null, eraserActive: false, assignments: {} }),
 }));

@@ -24,7 +24,7 @@ export function PaintToolbar({
   return (
     <div
       className={cn(
-        "flex items-center gap-2 overflow-x-auto px-4 py-2",
+        "flex items-end justify-center gap-4 border-t border-border-light px-4 pb-2 pt-3",
         className
       )}
     >
@@ -38,16 +38,23 @@ export function PaintToolbar({
               type="button"
               data-testid={`shift-btn-${shift.abbreviation}`}
               onClick={() => onSelectShift(shift.id)}
-              className={cn(
-                "flex size-12 shrink-0 items-center justify-center rounded-full text-[11px] font-bold transition-all",
-                isSelected && "scale-110 ring-2 ring-primary"
-              )}
-              style={{
-                backgroundColor: shift.color,
-                color: "#FFFFFF",
-              }}
+              className="flex flex-col items-center gap-1"
             >
-              {shift.abbreviation}
+              <div
+                className={cn(
+                  "flex size-14 items-center justify-center rounded-2xl text-sm font-bold transition-all",
+                  isSelected && "ring-2 ring-primary ring-offset-2"
+                )}
+                style={{
+                  backgroundColor: shift.bgColor,
+                  color: shift.color,
+                }}
+              >
+                {shift.name.length <= 3 ? shift.name : shift.abbreviation}
+              </div>
+              <span className="text-[10px] text-text-secondary">
+                {shift.name}
+              </span>
             </button>
           );
         })}
@@ -55,12 +62,17 @@ export function PaintToolbar({
         type="button"
         data-testid="eraser-btn"
         onClick={onToggleEraser}
-        className={cn(
-          "flex size-12 shrink-0 items-center justify-center rounded-full bg-surface-variant text-text-secondary transition-all",
-          eraserActive && "scale-110 ring-2 ring-primary"
-        )}
+        className="flex flex-col items-center gap-1"
       >
-        <Eraser className="size-5" />
+        <div
+          className={cn(
+            "flex size-14 items-center justify-center rounded-2xl bg-surface-variant text-text-secondary transition-all",
+            eraserActive && "ring-2 ring-primary ring-offset-2"
+          )}
+        >
+          <Eraser className="size-5" />
+        </div>
+        <span className="text-[10px] text-text-secondary">지우개</span>
       </button>
     </div>
   );
