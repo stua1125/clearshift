@@ -24,12 +24,12 @@ import { formatShortDate } from "@/lib/utils/format";
 import type { CalendarEvent } from "@/types";
 
 const EVENT_COLORS = [
-  "#0064FF",
-  "#FF9100",
+  "#3182F6",
+  "#FF9A3C",
   "#6C5CE7",
-  "#00B894",
-  "#FF3B30",
-  "#94A3B8",
+  "#1EC772",
+  "#F04452",
+  "#8B95A1",
 ];
 
 export default function EventsPage() {

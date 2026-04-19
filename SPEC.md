@@ -51,18 +51,19 @@
 
 #### Primary & Background
 ```
-Primary         #0064FF   토스 블루, CTA·강조·링크
-PrimaryContainer #E8F0FE   선택 상태 배경, 하이라이트
-Background      #FFFFFF   전체 배경
+Primary         #3182F6   토스 블루, CTA·강조·링크
+PrimaryContainer #E8F3FF   선택 상태 배경, 하이라이트
+Background      #F9FAFB   전체 배경 (Toss off-white)
 Surface         #FFFFFF   카드·시트 배경
-SurfaceVariant  #F4F4F5   입력 필드 배경, 구분 영역
+SurfaceVariant  #F2F4F6   입력 필드 배경, 구분 영역
 ```
 
-#### Text (Grayscale)
+#### Text (Grayscale — Toss Gray 900/700/500/400)
 ```
-TextPrimary     #191F28   제목, 본문
-TextSecondary   #8B95A1   보조 텍스트, 플레이스홀더
-TextTertiary    #B0B8C1   비활성 텍스트
+TextPrimary     #191F28   제목, 본문            (Gray 900)
+TextSecondary   #4E5968   보조 텍스트·부제목    (Gray 700)
+TextTertiary    #8B95A1   캡션·플레이스홀더     (Gray 500)
+TextDisabled    #B0B8C1   비활성 텍스트         (Gray 400)
 TextOnColor     #FFFFFF   컬러 배경 위 텍스트
 ```
 
@@ -70,29 +71,29 @@ TextOnColor     #FFFFFF   컬러 배경 위 텍스트
 ```
 Border          #E5E8EB   일반 테두리
 BorderLight     #F2F4F6   구분선, 약한 테두리
-BorderFocus     #0064FF   포커스 링
+BorderFocus     #3182F6   포커스 링
 ```
 
 #### Shift Type Colors (핵심)
 ```
-오전   text: #0064FF  bg: #E8F0FE
-오후   text: #FF9100  bg: #FFF3E0
+오전   text: #3182F6  bg: #E8F3FF
+오후   text: #FF9A3C  bg: #FFF4E6
 야간   text: #6C5CE7  bg: #F0EDFF
-휴무   text: #94A3B8  bg: #F1F5F9
-이브닝 text: #00B894  bg: #E6F9F3
+휴무   text: #8B95A1  bg: #F2F4F6
+이브닝 text: #1EC772  bg: #E6F9F0
 ```
 
-#### Semantic Colors
+#### Semantic Colors (Toss palette)
 ```
-Success   #00C853   제출 완료, 100% 달성
-Warning   #FF9100   진행 중, 주의
-Error     #FF3B30   에러, 초과, 일요일
+Success   #1EC772   제출 완료, 100% 달성
+Warning   #FF9A3C   진행 중, 주의
+Error     #F04452   에러, 초과, 일요일
 ```
 
 #### Calendar Colors
 ```
-Sunday      #FF3B30   일요일 텍스트
-Saturday    #0064FF   토요일 텍스트
+Sunday      #F04452   일요일 텍스트
+Saturday    #3182F6   토요일 텍스트
 CellHover   #F9FAFB   셀 호버 배경
 ```
 
@@ -104,7 +105,7 @@ OnSurface       #F9FAFB
 OnSurfaceVariant #8B95A1
 Outline         #2E3038
 OutlineVariant  #1F2028
-PrimaryContainer #0A2E5C
+PrimaryContainer #0E2E56
 ```
 
 ### 2.4 타이포그래피
@@ -582,10 +583,10 @@ interface CalendarState {
 
 | 약어 | 이름 | 카테고리 | 색상 | 시간 |
 |------|------|----------|------|------|
-| 오전 | 오전 근무 | WORK | #0064FF | 09:00-18:00 |
-| 오후 | 오후 근무 | WORK | #FF9100 | 14:00-22:00 |
+| 오전 | 오전 근무 | WORK | #3182F6 | 09:00-18:00 |
+| 오후 | 오후 근무 | WORK | #FF9A3C | 14:00-22:00 |
 | 야간 | 야간 근무 | WORK | #6C5CE7 | 22:00-07:00 |
-| 휴무 | 휴무 | OFF | #94A3B8 | - |
+| 휴무 | 휴무 | OFF | #8B95A1 | - |
 
 ---
 

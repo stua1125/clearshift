@@ -6,49 +6,50 @@
 @source "../../stores";
 @source "..";
 
-/* ── Design Tokens (SPEC.md §2.3) ── */
+/* ── Design Tokens (SPEC.md §2.3) — Toss palette ── */
 @theme {
-  /* Primary */
-  --color-primary: #0064FF;
-  --color-primary-container: #E8F0FE;
+  /* Primary (Toss Blue) */
+  --color-primary: #3182F6;
+  --color-primary-container: #E8F3FF;
   --color-on-primary: #FFFFFF;
 
-  /* Background & Surface */
-  --color-background: #FFFFFF;
+  /* Background & Surface (Toss off-white canvas + white cards) */
+  --color-background: #F9FAFB;
   --color-surface: #FFFFFF;
-  --color-surface-variant: #F4F4F5;
+  --color-surface-variant: #F2F4F6;
 
-  /* Text */
+  /* Text (Toss grayscale: 900 / 700 / 500 / 400) */
   --color-text-primary: #191F28;
-  --color-text-secondary: #8B95A1;
-  --color-text-tertiary: #B0B8C1;
+  --color-text-secondary: #4E5968;
+  --color-text-tertiary: #8B95A1;
+  --color-text-disabled: #B0B8C1;
   --color-text-on-color: #FFFFFF;
 
   /* Border */
   --color-border: #E5E8EB;
   --color-border-light: #F2F4F6;
-  --color-border-focus: #0064FF;
+  --color-border-focus: #3182F6;
 
-  /* Semantic */
-  --color-success: #00C853;
-  --color-warning: #FF9100;
-  --color-error: #FF3B30;
+  /* Semantic (Toss palette) */
+  --color-success: #1EC772;
+  --color-warning: #FF9A3C;
+  --color-error: #F04452;
 
   /* Shift Type Colors */
-  --color-shift-morning: #0064FF;
-  --color-shift-morning-bg: #E8F0FE;
-  --color-shift-afternoon: #FF9100;
-  --color-shift-afternoon-bg: #FFF3E0;
+  --color-shift-morning: #3182F6;
+  --color-shift-morning-bg: #E8F3FF;
+  --color-shift-afternoon: #FF9A3C;
+  --color-shift-afternoon-bg: #FFF4E6;
   --color-shift-night: #6C5CE7;
   --color-shift-night-bg: #F0EDFF;
-  --color-shift-off: #94A3B8;
-  --color-shift-off-bg: #F1F5F9;
-  --color-shift-evening: #00B894;
-  --color-shift-evening-bg: #E6F9F3;
+  --color-shift-off: #8B95A1;
+  --color-shift-off-bg: #F2F4F6;
+  --color-shift-evening: #1EC772;
+  --color-shift-evening-bg: #E6F9F0;
 
   /* Calendar */
-  --color-sunday: #FF3B30;
-  --color-saturday: #0064FF;
+  --color-sunday: #F04452;
+  --color-saturday: #3182F6;
   --color-cell-hover: #F9FAFB;
 
   /* Radius */
@@ -72,7 +73,7 @@
     --color-text-secondary: #8B95A1;
     --color-border: #2E3038;
     --color-border-light: #1F2028;
-    --color-primary-container: #0A2E5C;
+    --color-primary-container: #0E2E56;
   }
 }
 

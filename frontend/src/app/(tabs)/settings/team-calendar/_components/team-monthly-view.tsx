@@ -27,8 +27,8 @@ export function TeamMonthlyView({ schedules }: TeamMonthlyViewProps) {
               className={cn(
                 "rounded-full px-2 py-0.5 text-[10px] font-semibold",
                 member.status === "SUBMITTED"
-                  ? "bg-[#E6F9F3] text-success"
-                  : "bg-[#FFF3E0] text-warning"
+                  ? "bg-[#E6F9F0] text-success"
+                  : "bg-[#FFF4E6] text-warning"
               )}
             >
               {member.status === "SUBMITTED" ? "제출" : "미제출"}

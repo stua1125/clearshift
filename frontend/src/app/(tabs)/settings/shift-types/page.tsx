@@ -22,12 +22,12 @@ import Link from "next/link";
 import type { ShiftType } from "@/types";
 
 const DEFAULT_COLORS = [
-  { color: "#0064FF", bgColor: "#E8F0FE" },
-  { color: "#FF9100", bgColor: "#FFF3E0" },
+  { color: "#3182F6", bgColor: "#E8F3FF" },
+  { color: "#FF9A3C", bgColor: "#FFF4E6" },
   { color: "#6C5CE7", bgColor: "#F0EDFF" },
-  { color: "#94A3B8", bgColor: "#F1F5F9" },
-  { color: "#00B894", bgColor: "#E6F9F3" },
-  { color: "#FF3B30", bgColor: "#FFE5E5" },
+  { color: "#8B95A1", bgColor: "#F2F4F6" },
+  { color: "#1EC772", bgColor: "#E6F9F0" },
+  { color: "#F04452", bgColor: "#FFE5E7" },
 ];
 
 export default function ShiftTypesPage() {
